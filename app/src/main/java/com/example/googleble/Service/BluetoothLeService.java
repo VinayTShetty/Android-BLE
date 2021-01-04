@@ -64,7 +64,7 @@ public class BluetoothLeService extends Service {
      * Local I Binder.
      */
     public class LocalBinder extends Binder{
-        BluetoothLeService getService(){
+         public BluetoothLeService getService(){
             return BluetoothLeService.this;
         }
     }
