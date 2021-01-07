@@ -2,7 +2,6 @@ package com.example.googleble;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -13,19 +12,30 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-
+import android.view.View;
+import android.widget.TextView;
 import com.example.googleble.Service.BluetoothLeService;
-
 public class MainActivity extends AppCompatActivity {
     /**
      *BluetoothLeService class Variables.
      */
     private BluetoothLeService mBluetoothLeService;
-    String mDeviceAddress="";
+    String mDeviceAddress="D4:22:50:31:E4:95";
+    TextView demoapplicaiton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        demoapplicaiton=(TextView)findViewById(R.id.demo_applciaiton);
+        demoapplicaiton.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+                    mBluetoothLeService.connect(mDeviceAddress);
+                }
+            }
+        });
     }
 
     @Override
