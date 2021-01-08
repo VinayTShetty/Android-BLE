@@ -158,6 +158,14 @@ public class BluetoothLeService extends Service {
 
     private void broadcastUpdate(final String action, final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
+        final byte[] data = characteristic.getValue();
+        if (data != null && data.length > 0) {
+            final StringBuilder stringBuilder = new StringBuilder(data.length);
+            for(byte byteChar : data)
+                stringBuilder.append(String.format("%02X ", byteChar));
+            intent.putExtra(EXTRA_DATA, new String(data) + "\n" + stringBuilder.toString());
+        }
+
         sendBroadcast(intent);
     }
 
@@ -187,7 +195,7 @@ public class BluetoothLeService extends Service {
      * Send Data to BLE Devices.
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public static void sendDataToBleDevice(byte [] data){
+    public  void sendDataToBleDevice(byte [] data){
         BluetoothGattService service=mBluetoothGatt.getService(GEO_FENCE_SERVICE_UUID);
         BluetoothGattCharacteristic characteristic= service.getCharacteristic(GEO_FENCE_CHARCTERSTICS_UUID);
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
@@ -288,6 +296,8 @@ public class BluetoothLeService extends Service {
         }
         mBluetoothGatt.readCharacteristic(characteristic);
     }
+
+
 
 }
 

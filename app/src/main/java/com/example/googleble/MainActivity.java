@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import com.example.googleble.Service.BluetoothLeService;
 public class MainActivity extends AppCompatActivity {
@@ -21,12 +22,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private BluetoothLeService mBluetoothLeService;
     String mDeviceAddress="D4:A6:CB:43:B6:70";
-    TextView demoapplicaiton;
+    Button demoapplicaiton,sendCommand;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        demoapplicaiton=(TextView)findViewById(R.id.demo_applciaiton);
+        demoapplicaiton=(Button) findViewById(R.id.demo_applciaiton);
+        sendCommand=(Button) findViewById(R.id.send_command);
         bindBleServiceToMainActivity();
         demoapplicaiton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -35,6 +37,14 @@ public class MainActivity extends AppCompatActivity {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
                     mBluetoothLeService.connect(mDeviceAddress);
                 }
+            }
+        });
+
+        sendCommand.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String test="smpon";
+               mBluetoothLeService.sendDataToBleDevice(test.getBytes());
             }
         });
     }
@@ -102,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
 
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
+                String data=intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
+                System.out.println(data);
             }
         }
     };
