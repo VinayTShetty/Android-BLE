@@ -20,13 +20,14 @@ public class MainActivity extends AppCompatActivity {
      *BluetoothLeService class Variables.
      */
     private BluetoothLeService mBluetoothLeService;
-    String mDeviceAddress="D4:22:50:31:E4:95";
+    String mDeviceAddress="D4:A6:CB:43:B6:70";
     TextView demoapplicaiton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         demoapplicaiton=(TextView)findViewById(R.id.demo_applciaiton);
+        bindBleServiceToMainActivity();
         demoapplicaiton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
             @Override
@@ -48,9 +49,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         registerReceiver(bluetootServiceRecieverData, makeGattUpdateIntentFilter());
-        if (mBluetoothLeService != null) {
-            final boolean result = mBluetoothLeService.connect(mDeviceAddress);
-        }
     }
 
     @Override
@@ -117,5 +115,10 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
         return intentFilter;
+    }
+
+    private void bindBleServiceToMainActivity(){
+        Intent intent = new Intent(this, BluetoothLeService.class);
+        bindService(intent, serviceConnection, BIND_AUTO_CREATE);
     }
 }
