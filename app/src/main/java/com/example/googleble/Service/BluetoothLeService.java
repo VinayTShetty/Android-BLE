@@ -120,6 +120,7 @@ public class BluetoothLeService extends Service {
             Log.d(TAG,"onCharacteristicWrite Write Type "+characteristic.getWriteType());
             Log.d(TAG,"onCharacteristicWrite Write Type "+characteristic.getValue());
             Log.d(TAG,"onCharacteristicWrite Write Type "+status);
+            Log.d(TAG,"onCharacteristicWrite Write Type "+new String(characteristic.getValue()));
         }
 
         @Override
