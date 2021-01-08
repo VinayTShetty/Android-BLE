@@ -103,6 +103,7 @@ public class BluetoothLeService extends Service {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
                 enableChartersticNotification(gatt);
             }
+            Log.d(TAG,"onServicesDiscovered");
         }
 
         @Override
@@ -110,41 +111,51 @@ public class BluetoothLeService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
+            Log.d(TAG,"onCharacteristicRead");
         }
 
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
+            Log.d(TAG,"onCharacteristicWrite Write Type "+characteristic.getWriteType());
+            Log.d(TAG,"onCharacteristicWrite Write Type "+characteristic.getValue());
+            Log.d(TAG,"onCharacteristicWrite Write Type "+status);
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            Log.d(TAG,"onCharacteristicChanged");
         }
 
         @Override
         public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorRead(gatt, descriptor, status);
+            Log.d(TAG,"onDescriptorRead");
         }
 
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorWrite(gatt, descriptor, status);
+            Log.d(TAG,"onDescriptorWrite");
         }
 
         @Override
         public void onReliableWriteCompleted(BluetoothGatt gatt, int status) {
             super.onReliableWriteCompleted(gatt, status);
+            Log.d(TAG,"onReliableWriteCompleted");
         }
 
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
             super.onReadRemoteRssi(gatt, rssi, status);
+            Log.d(TAG,"onReadRemoteRssi");
         }
 
         @Override
         public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
             super.onMtuChanged(gatt, mtu, status);
+            Log.d(TAG,"onMtuChanged");
         }
     };
 
