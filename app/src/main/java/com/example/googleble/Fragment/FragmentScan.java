@@ -57,10 +57,22 @@ public class FragmentScan extends BaseFragment {
         setHasOptionsMenu(true);
         interfaceImplementationCallBack();
         setUpRecycleView();
+        fragmentSscaAdapterInterfaceImplementation();
         return  fragmenScanView;
     }
 
-private void interfaceIntialization(){
+    private void fragmentSscaAdapterInterfaceImplementation() {
+        my_fragmentScanAdapter.setOnItemClickLIstner(new FragmentScanAdapter.ScanOnItemClickInterface() {
+            @Override
+            public void ClickedItem(CustBluetootDevices custBluetootDevices, int positionClicked) {
+                    if(deviceClikckedForConnectionInterface!=null){
+                        deviceClikckedForConnectionInterface.connectToDevice(custBluetootDevices);
+                    }
+            }
+        });
+    }
+
+    private void interfaceIntialization(){
     deviceClikckedForConnectionInterface=(DeviceClikckedForConnection)getActivity();
 }
 
@@ -145,7 +157,6 @@ private void interfaceIntialization(){
         myMainActivity.setupPassScanDeviceToActivity_interface(new PassScanDeviceToActivity_interface() {
             @Override
             public void sendCustomBleDevice(CustBluetootDevices custBluetootDevices) {
-
                 if(!custBluetootDevicesArrayList.contains(custBluetootDevices)){
                     custBluetootDevicesArrayList.add(custBluetootDevices);
                     my_fragmentScanAdapter.notifyDataSetChanged();
@@ -160,5 +171,7 @@ private void interfaceIntialization(){
         fragmentScanRecycleView.setLayoutManager(mLayoutManager);
         fragmentScanRecycleView.setAdapter(my_fragmentScanAdapter);
     }
+
+
 
 }

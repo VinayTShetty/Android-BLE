@@ -243,6 +243,6 @@ public class MainActivity extends AppCompatActivity implements DeviceClikckedFor
         /**
          * onClicked of the Device
          */
-        
+        System.out.println("MainActivity "+custBluetootDevices.getBleAddress());
     }
 }

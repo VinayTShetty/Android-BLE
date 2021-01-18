@@ -68,6 +68,15 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
                 connectButton_button.setText("Connecet");
                 connectButton_button.setTextColor(context.getResources().getColor(R.color.disconnect_color));
             }
+
+            scanItemViewHolder.connectButton_button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(scanOnItemClickInterface!=null){
+                        scanOnItemClickInterface.ClickedItem(custBluetootDevices,getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 
