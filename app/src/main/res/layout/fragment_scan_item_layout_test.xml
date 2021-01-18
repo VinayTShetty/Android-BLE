@@ -43,7 +43,6 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/black"
                 android:text="Connect"
-                android:textSize="12dp"
                 android:textAllCaps="false"
                 android:layout_alignParentRight="true"
                 >

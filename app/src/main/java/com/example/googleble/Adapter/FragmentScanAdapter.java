@@ -9,11 +9,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.R;
 
 import java.util.ArrayList;
+
+
 
 public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapter.ScanItemViewHolder> {
     private ArrayList<CustBluetootDevices> customBluetoothdevices;
@@ -43,11 +44,13 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
 
     public class ScanItemViewHolder  extends  RecyclerView.ViewHolder implements View.OnClickListener{
         TextView bleAddress_textView;
+        TextView device_name;
         Button connectButton_button;
         public ScanItemViewHolder(@NonNull View itemView) {
             super(itemView);
             this.bleAddress_textView=(TextView)itemView.findViewById(R.id.ble_address);
             this.connectButton_button=(Button)itemView.findViewById(R.id.connect_button);
+            this.device_name=(TextView)itemView.findViewById(R.id.device_name_text);
         }
 
         @Override
@@ -57,10 +60,13 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
 
         void bindBluetoothDeviceDetails(CustBluetootDevices custBluetootDevices,ScanItemViewHolder scanItemViewHolder){
             bleAddress_textView.setText(custBluetootDevices.getBleAddress());
+            device_name.setText(custBluetootDevices.getDeviceName());
             if(custBluetootDevices.isConnected()){
                 connectButton_button.setText("DisConnect");
+                connectButton_button.setTextColor(context.getResources().getColor(R.color.connect_color));
             }else if(!(custBluetootDevices.isConnected())){
                 connectButton_button.setText("Connecet");
+                connectButton_button.setTextColor(context.getResources().getColor(R.color.disconnect_color));
             }
         }
     }
