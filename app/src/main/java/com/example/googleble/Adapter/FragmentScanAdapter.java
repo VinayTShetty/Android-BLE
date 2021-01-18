@@ -18,6 +18,11 @@ import java.util.ArrayList;
 public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapter.ScanItemViewHolder> {
     private ArrayList<CustBluetootDevices> customBluetoothdevices;
     private Context context;
+
+    public FragmentScanAdapter(ArrayList<CustBluetootDevices> loc_custBluetootDevicesArrayList){
+        customBluetoothdevices=loc_custBluetootDevicesArrayList;
+    }
+
     @NonNull
     @Override
     public ScanItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,12 +42,12 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
     }
 
     public class ScanItemViewHolder  extends  RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView bleAddress;
-        Button ConnectButton;
+        TextView bleAddress_textView;
+        Button connectButton_button;
         public ScanItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.bleAddress=(TextView)itemView.findViewById(R.id.ble_address);
-            this.ConnectButton=(Button)itemView.findViewById(R.id.connect_button);
+            this.bleAddress_textView=(TextView)itemView.findViewById(R.id.ble_address);
+            this.connectButton_button=(Button)itemView.findViewById(R.id.connect_button);
         }
 
         @Override
@@ -51,7 +56,12 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
         }
 
         void bindBluetoothDeviceDetails(CustBluetootDevices custBluetootDevices,ScanItemViewHolder scanItemViewHolder){
-
+            bleAddress_textView.setText(custBluetootDevices.getBleAddress());
+            if(custBluetootDevices.isConnected()){
+                connectButton_button.setText("DisConnect");
+            }else if(!(custBluetootDevices.isConnected())){
+                connectButton_button.setText("Connecet");
+            }
         }
     }
 }

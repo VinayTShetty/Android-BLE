@@ -2,6 +2,9 @@ package com.example.googleble;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.BluetoothLeScanner;
@@ -21,14 +24,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.googleble.CustomObjects.CustBluetootDevices;
+import com.example.googleble.Fragment.FragmentScan;
 import com.example.googleble.Service.BluetoothLeService;
+import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
+
 public class MainActivity extends AppCompatActivity {
     /**
      *BluetoothLeService class Variables.
      */
     private BluetoothLeService mBluetoothLeService;
     String mDeviceAddress="D4:A6:CB:43:B6:70";
-    Button demoapplicaiton,sendCommand;
+/*    Button demoapplicaiton,sendCommand;*/
 
 
     /**
@@ -40,16 +48,25 @@ public class MainActivity extends AppCompatActivity {
     private Handler handler = new Handler();
     // Stops scanning after 10 seconds.
     private static final long SCAN_PERIOD = 10000;
+    FragmentManager fragmentManager;
+    FragmentTransaction fragmentTransaction;
 
+    /**
+     * Activity to Fragment interface
+     */
+    PassScanDeviceToActivity_interface passScanDeviceToActivity_interface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        demoapplicaiton=(Button) findViewById(R.id.demo_applciaiton);
-        sendCommand=(Button) findViewById(R.id.send_command);
+        interfaceIntialization();
         bindBleServiceToMainActivity();
-        demoapplicaiton.setOnClickListener(new View.OnClickListener() {
+        intializeFragmentManager();
+      /*  demoapplicaiton=(Button) findViewById(R.id.demo_applciaiton);
+        sendCommand=(Button) findViewById(R.id.send_command);*/
+
+      /*  demoapplicaiton.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
             @Override
             public void onClick(View v) {
@@ -65,8 +82,9 @@ public class MainActivity extends AppCompatActivity {
                 String test="smpon";
                mBluetoothLeService.sendDataToBleDevice(test.getBytes());
             }
-        });
+        });*/
         scanLeDevice();
+        replaceFragmentTransaction(new FragmentScan(),null);
     }
 
     @Override
@@ -181,8 +199,39 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
                     super.onScanResult(callbackType, result);
-                    System.out.println("BleDevices= "+result.getDevice().getAddress());
+                  if(passScanDeviceToActivity_interface!=null){
+                      passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(),"BLE Device",result.getDevice(),false));
+                  }
                 }
             };
 
+    /**
+     * Fragment Transaction
+     */
+
+    public void replaceFragmentTransaction(Fragment fragment,Bundle bundleData){
+        fragmentTransaction= fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container,fragment);
+        fragmentTransaction.commit();
+    }
+
+    private void intializeFragmentManager(){
+        fragmentManager=getSupportFragmentManager();
+    }
+
+    /**
+     * Interface intialization (From Activity to Fragment)
+     */
+    public void  setupPassScanDeviceToActivity_interface(PassScanDeviceToActivity_interface loc_passScanDeviceToActivity_interface){
+        this.passScanDeviceToActivity_interface=loc_passScanDeviceToActivity_interface;
+    }
+
+    private void interfaceIntialization(){
+        setupPassScanDeviceToActivity_interface(new PassScanDeviceToActivity_interface() {
+            @Override
+            public void sendCustomBleDevice(CustBluetootDevices custBluetootDevices) {
+
+            }
+        });
+    }
 }
