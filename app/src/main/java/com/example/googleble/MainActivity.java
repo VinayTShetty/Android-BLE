@@ -29,8 +29,9 @@ import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.Fragment.FragmentScan;
 import com.example.googleble.Service.BluetoothLeService;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
+import com.example.googleble.interfaceFragmentActivity.DeviceClikckedForConnection;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DeviceClikckedForConnection {
     /**
      *BluetoothLeService class Variables.
      */
@@ -235,5 +236,13 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    public void connectToDevice(CustBluetootDevices custBluetootDevices) {
+        /**
+         * onClicked of the Device
+         */
+        
     }
 }

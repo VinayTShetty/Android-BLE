@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -22,6 +23,7 @@ import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.MainActivity;
 import com.example.googleble.R;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
+import com.example.googleble.interfaceFragmentActivity.DeviceClikckedForConnection;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,7 @@ public class FragmentScan extends BaseFragment {
     FragmentScanAdapter my_fragmentScanAdapter;
     RecyclerView fragmentScanRecycleView;
     private ArrayList<CustBluetootDevices> custBluetootDevicesArrayList=new ArrayList<CustBluetootDevices>();
+    DeviceClikckedForConnection deviceClikckedForConnectionInterface;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -43,6 +46,7 @@ public class FragmentScan extends BaseFragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myMainActivity=(MainActivity)getActivity();
+        interfaceIntialization();
     }
 
     @Nullable
@@ -55,6 +59,10 @@ public class FragmentScan extends BaseFragment {
         setUpRecycleView();
         return  fragmenScanView;
     }
+
+private void interfaceIntialization(){
+    deviceClikckedForConnectionInterface=(DeviceClikckedForConnection)getActivity();
+}
 
 
     private void intializeView() {
@@ -93,8 +101,23 @@ public class FragmentScan extends BaseFragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.fragment_scan,menu);
+        inflater.inflate(R.menu.fragment_scan_menu_items,menu);
         super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.stop_item:
+                Toast.makeText(getActivity(), "Stop", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.scan_item:
+                Toast.makeText(getActivity(), "Scan", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

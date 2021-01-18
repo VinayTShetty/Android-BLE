@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapter.ScanItemViewHolder> {
     private ArrayList<CustBluetootDevices> customBluetoothdevices;
     private Context context;
-
+    private ScanOnItemClickInterface scanOnItemClickInterface;
     public FragmentScanAdapter(ArrayList<CustBluetootDevices> loc_custBluetootDevicesArrayList){
         customBluetoothdevices=loc_custBluetootDevicesArrayList;
     }
@@ -69,5 +69,12 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
                 connectButton_button.setTextColor(context.getResources().getColor(R.color.disconnect_color));
             }
         }
+    }
+
+    public interface ScanOnItemClickInterface{
+    public void ClickedItem(CustBluetootDevices custBluetootDevices,int positionClicked);
+    }
+    public void setOnItemClickLIstner(ScanOnItemClickInterface loc_scanOnItemClickInterface){
+      this.scanOnItemClickInterface=loc_scanOnItemClickInterface;
     }
 }
