@@ -18,6 +18,9 @@ import android.os.IBinder;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import com.example.googleble.R;
+
 import java.util.List;
 import java.util.UUID;
 import static com.example.googleble.UUID.FirmwareUUID.CLIENT_CHARACTERISTIC_CONFIG;
@@ -87,6 +90,7 @@ public class BluetoothLeService extends Service {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
+                broadCastUpdate(intentAction,gatt.getDevice().getAddress());
                 mBluetoothGatt.discoverServices();
                 broadcastUpdate(intentAction);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
@@ -168,6 +172,12 @@ public class BluetoothLeService extends Service {
         sendBroadcast(intent);
     }
 
+    private void broadCastUpdate(final String action,String bleAddress){
+        final Intent intent = new Intent(action);
+        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS), bleAddress);
+        sendBroadcast(intent);
+    }
+
     private void broadcastUpdate(final String action, final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
         final byte[] data = characteristic.getValue();
@@ -243,8 +253,7 @@ public class BluetoothLeService extends Service {
         if (mBluetoothAdapter == null || address == null) {
             return false;
         }
-        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)
-                && mBluetoothGatt != null) {
+        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)&& mBluetoothGatt != null) {
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTING;
                 return true;
