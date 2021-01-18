@@ -149,10 +149,11 @@ public class MainActivity extends AppCompatActivity implements DeviceClikckedFor
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-
+                String test="smpon";
+                mBluetoothLeService.sendDataToBleDevice(test.getBytes());
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 String data=intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
-                System.out.println(data);
+                System.out.println("Recieved Data---> "+data);
             }
         }
     };
@@ -240,9 +241,6 @@ public class MainActivity extends AppCompatActivity implements DeviceClikckedFor
 
     @Override
     public void connectToDevice(CustBluetootDevices custBluetootDevices) {
-        /**
-         * onClicked of the Device
-         */
-        System.out.println("MainActivity "+custBluetootDevices.getBleAddress());
+        mBluetoothLeService.connect(custBluetootDevices.getBleAddress());
     }
 }
