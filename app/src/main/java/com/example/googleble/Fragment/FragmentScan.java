@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -48,6 +50,7 @@ public class FragmentScan extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmenScanView = inflater.inflate(R.layout.fragment_scan, container, false);
         intializeView();
+        setHasOptionsMenu(true);
         interfaceImplementationCallBack();
         setUpRecycleView();
         return  fragmenScanView;
@@ -86,6 +89,12 @@ public class FragmentScan extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_scan,menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
