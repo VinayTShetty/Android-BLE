@@ -2,6 +2,11 @@ package com.example.googleble;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.le.BluetoothLeScanner;
+import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanResult;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -10,6 +15,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
@@ -23,6 +29,19 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothLeService mBluetoothLeService;
     String mDeviceAddress="D4:A6:CB:43:B6:70";
     Button demoapplicaiton,sendCommand;
+
+
+    /**
+     *Scan for the Ble Devices.
+     */
+    private BluetoothLeScanner bluetoothLeScanner =
+            BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
+    private boolean mScanning;
+    private Handler handler = new Handler();
+    // Stops scanning after 10 seconds.
+    private static final long SCAN_PERIOD = 10000;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
                mBluetoothLeService.sendDataToBleDevice(test.getBytes());
             }
         });
+        scanLeDevice();
     }
 
     @Override
@@ -133,4 +153,36 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, BluetoothLeService.class);
         bindService(intent, serviceConnection, BIND_AUTO_CREATE);
     }
+
+    /**
+     * Scan for the BLE Devices.
+     */
+    public void scanLeDevice() {
+        if (!mScanning) {
+            // Stops scanning after a pre-defined scan period.
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mScanning = false;
+                    bluetoothLeScanner.stopScan(leScanCallback);
+                }
+            }, SCAN_PERIOD);
+
+            mScanning = true;
+            bluetoothLeScanner.startScan(leScanCallback);
+        } else {
+            mScanning = false;
+            bluetoothLeScanner.stopScan(leScanCallback);
+        }
+    }
+
+    private ScanCallback leScanCallback =
+            new ScanCallback() {
+                @Override
+                public void onScanResult(int callbackType, ScanResult result) {
+                    super.onScanResult(callbackType, result);
+                    System.out.println("BleDevices= "+result.getDevice().getAddress());
+                }
+            };
+
 }

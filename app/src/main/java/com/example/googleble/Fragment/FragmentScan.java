@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.googleble.BaseFragment.BaseFragment;
+import com.example.googleble.MainActivity;
 import com.example.googleble.R;
 
 import static com.example.googleble.Utility.UtilityHelper.showPermissionDialog;
@@ -20,6 +21,7 @@ import static com.example.googleble.Utility.UtilityHelper.showPermissionDialog;
 public class FragmentScan extends BaseFragment {
     View fragmenScanView;
     private final int LocationPermissionRequestCode = 100;
+    MainActivity myMainActivity;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -28,6 +30,7 @@ public class FragmentScan extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        myMainActivity=(MainActivity)getActivity();
     }
 
     @Nullable
@@ -73,7 +76,7 @@ public class FragmentScan extends BaseFragment {
         switch (requestCode) {
             case LocationPermissionRequestCode:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
+                    myMainActivity.scanLeDevice();
                 } else {
                     askPermission();
                 }

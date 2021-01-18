@@ -2,6 +2,8 @@ package com.example.googleble.CustomObjects;
 
 import android.bluetooth.BluetoothDevice;
 
+import androidx.annotation.Nullable;
+
 public class CustBluetootDevices {
     private String bleAddress;
     private String deviceName;
@@ -49,4 +51,16 @@ public class CustBluetootDevices {
     public void setConnected(boolean connected) {
         isConnected = connected;
     }
+
+    /**
+     *
+     * equals method is used to make the Unique when the Device is added to the Arraylist.
+     * By overriding the equals method.
+     *
+     */
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return obj instanceof CustBluetootDevices && (this.bleAddress.equalsIgnoreCase(((CustBluetootDevices) obj).bleAddress));
+    }
+
 }

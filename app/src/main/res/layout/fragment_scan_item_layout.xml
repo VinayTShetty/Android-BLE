@@ -4,41 +4,41 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp">
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:weightSum="1"
-    >
-    <ImageView
-        android:id="@+id/bluetooth_icon"
-        android:layout_width="0dp"
-        android:layout_height="80dp"
-        android:layout_weight="0.2"
-        android:src="@drawable/bluetooth_icon">
-    </ImageView>
-    <TextView
-        android:id="@+id/ble_address"
-        android:layout_weight="0.4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="AS:ER:FR:TR:RE:ER"
-        android:textStyle="bold"
-        android:textSize="18dp"
-        android:textColor="@color/black">
-    </TextView>
-    <Button
-        android:id="@+id/connect_button"
-        android:layout_weight="0.4"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Connect"
-        android:textAllCaps="false"
-        android:layout_gravity="center"
-        android:backgroundTint="@color/black"
-        >
-    </Button>
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+        <ImageView
+            android:id="@+id/bluetooth_icon"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_weight="0.2"
+            android:src="@drawable/bluetooth_icon">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/ble_address"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.4"
+            android:text="AS:ER:FR:TR:RE:ER"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold">
+        </TextView>
+
+        <Button
+            android:id="@+id/connect_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="0.4"
+            android:backgroundTint="@color/black"
+            android:text="Connect"
+            android:textAllCaps="false">
+        </Button>
+    </LinearLayout>
 </androidx.cardview.widget.CardView>
