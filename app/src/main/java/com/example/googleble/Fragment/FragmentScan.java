@@ -22,6 +22,7 @@ import com.example.googleble.BaseFragment.BaseFragment;
 import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.MainActivity;
 import com.example.googleble.R;
+import com.example.googleble.interfaceActivityFragment.PassConncetionSucessBleAddressToActivity_interface;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
 import com.example.googleble.interfaceFragmentActivity.DeviceClikckedForConnection;
 
@@ -163,6 +164,20 @@ public class FragmentScan extends BaseFragment {
                     custBluetootDevicesArrayList.add(custBluetootDevices);
                     my_fragmentScanAdapter.notifyDataSetChanged();
                 };
+            }
+        });
+        myMainActivity.setupPassConncetionSucessBleAddressToActivity_interface(new PassConncetionSucessBleAddressToActivity_interface() {
+            @Override
+            public void connectionSucessACK_ActivityToFragment(String bleAddress) {
+                CustBluetootDevices custBluetootDevices=new CustBluetootDevices();
+                custBluetootDevices.setBleAddress(bleAddress);
+                System.out.println("Fragment Scan= "+custBluetootDevicesArrayList.contains(custBluetootDevices));
+                if(custBluetootDevicesArrayList.contains(custBluetootDevices)){
+                    int postion= custBluetootDevicesArrayList.indexOf(custBluetootDevices);
+                   CustBluetootDevices custBluetootDevices1= custBluetootDevicesArrayList.get(postion);
+                   custBluetootDevices1.setConnected(true);
+                   my_fragmentScanAdapter.notifyDataSetChanged();
+                }
             }
         });
     }

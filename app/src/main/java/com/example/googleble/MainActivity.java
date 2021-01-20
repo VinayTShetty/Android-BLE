@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.Fragment.FragmentScan;
 import com.example.googleble.Service.BluetoothLeService;
+import com.example.googleble.interfaceActivityFragment.PassConncetionSucessBleAddressToActivity_interface;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
 import com.example.googleble.interfaceFragmentActivity.DeviceClikckedForConnection;
 
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements DeviceClikckedFor
      * Activity to Fragment interface
      */
     PassScanDeviceToActivity_interface passScanDeviceToActivity_interface;
+    PassConncetionSucessBleAddressToActivity_interface passConncetionSucessBleAddressToActivity_interface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements DeviceClikckedFor
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
+            System.out.println("------------------->"+action);
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
                 invalidateOptionsMenu();
@@ -156,8 +159,15 @@ public class MainActivity extends AppCompatActivity implements DeviceClikckedFor
                 String data=intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
                 System.out.println("MainActivity Device Data avaliable=  "+data);
             }else if((action!=null)&&(action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)))){
-
-
+//                String connectedDeviceAddress=(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS));
+                String connectedDeviceAddress=intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)));
+                System.out.println("Main Activity "+connectedDeviceAddress);
+                passConnectionSucesstoFragmentScanForUIChange(connectedDeviceAddress);
+            }
+        }
+        private void passConnectionSucesstoFragmentScanForUIChange(String connectedDeviceAddress) {
+            if(passConncetionSucessBleAddressToActivity_interface!=null){
+                passConncetionSucessBleAddressToActivity_interface.connectionSucessACK_ActivityToFragment(connectedDeviceAddress);
             }
         }
     };
@@ -170,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements DeviceClikckedFor
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction("BLESERVICE_BLEADDRESS");
         return intentFilter;
     }
 
@@ -238,10 +249,21 @@ public class MainActivity extends AppCompatActivity implements DeviceClikckedFor
         this.passScanDeviceToActivity_interface=loc_passScanDeviceToActivity_interface;
     }
 
+    public void setupPassConncetionSucessBleAddressToActivity_interface(PassConncetionSucessBleAddressToActivity_interface loc_passConncetionSucessBleAddressToActivity_interface){
+        this.passConncetionSucessBleAddressToActivity_interface=loc_passConncetionSucessBleAddressToActivity_interface;
+    }
+
     private void interfaceIntialization(){
         setupPassScanDeviceToActivity_interface(new PassScanDeviceToActivity_interface() {
             @Override
             public void sendCustomBleDevice(CustBluetootDevices custBluetootDevices) {
+
+            }
+        });
+
+        setupPassConncetionSucessBleAddressToActivity_interface(new PassConncetionSucessBleAddressToActivity_interface() {
+            @Override
+            public void connectionSucessACK_ActivityToFragment(String bleAddress) {
 
             }
         });
