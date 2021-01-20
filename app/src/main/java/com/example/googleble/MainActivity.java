@@ -206,8 +206,12 @@ public class MainActivity extends AppCompatActivity implements DeviceClikckedFor
                 public void onScanResult(int callbackType, ScanResult result) {
                     super.onScanResult(callbackType, result);
                   if(passScanDeviceToActivity_interface!=null){
-                      if(result!=null&&result.getDevice().getName()!=null){
+                 /*     if(result!=null&&result.getDevice().getName()!=null){
                           passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(),result.getDevice().getName(),result.getDevice(),false));
+                      }*/
+
+                      if(result!=null){
+                          passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(),"BLE Device",result.getDevice(),false));
                       }
                   }
                 }
