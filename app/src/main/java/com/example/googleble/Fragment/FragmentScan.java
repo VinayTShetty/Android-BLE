@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.googleble.Adapter.FragmentScanAdapter;
 import com.example.googleble.BaseFragment.BaseFragment;
 import com.example.googleble.CustomObjects.CustBluetootDevices;
+import com.example.googleble.DialogHelper.ShowDialogHelper;
 import com.example.googleble.MainActivity;
 import com.example.googleble.R;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
@@ -30,6 +31,7 @@ import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.googleble.Utility.UtilityHelper.ble_on_off;
 import static com.example.googleble.Utility.UtilityHelper.showPermissionDialog;
 
 public class FragmentScan extends BaseFragment {
@@ -40,6 +42,7 @@ public class FragmentScan extends BaseFragment {
     RecyclerView fragmentScanRecycleView;
     private ArrayList<CustBluetootDevices> custBluetootDevicesArrayList = new ArrayList<CustBluetootDevices>();
     DeviceConnectDisconnect deviceConnectDisconnect;
+    ShowDialogHelper showDialogHelper;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -58,11 +61,16 @@ public class FragmentScan extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmenScanView = inflater.inflate(R.layout.fragment_scan, container, false);
         intializeView();
+        intializeDailogHelper();
         setHasOptionsMenu(true);
         interfaceImplementationCallBack();
         setUpRecycleView();
         fragmentSscaAdapterInterfaceImplementation();
         return fragmenScanView;
+    }
+
+    private void intializeDailogHelper() {
+        showDialogHelper=new ShowDialogHelper(getActivity());
     }
 
     private void fragmentSscaAdapterInterfaceImplementation() {
@@ -73,7 +81,11 @@ public class FragmentScan extends BaseFragment {
                     if (custBluetootDevices.isConnected()) {
                         deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, false);
                     } else if (!custBluetootDevices.isConnected()) {
-                        deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, true);
+                        if(ble_on_off()){
+                            deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, true);
+                        }else {
+                            showDialogHelper.errorDialog("Turn on Bluetooth");
+                        }
                     }
                 }
             }
@@ -189,7 +201,7 @@ public class FragmentScan extends BaseFragment {
                         CustBluetootDevices custBluetootDevices1 = custBluetootDevicesArrayList.get(postion);
                         custBluetootDevices1.setConnected(true);
                         my_fragmentScanAdapter.notifyItemChanged(postion);
-                        myMainActivity.replaceFragmentTransaction(new FragmentData(),null);
+                     //   myMainActivity.replaceFragmentTransaction(new FragmentData(),null);
                     }
                 } else {
                     CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
