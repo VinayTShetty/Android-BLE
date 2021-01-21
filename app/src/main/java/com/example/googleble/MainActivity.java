@@ -153,17 +153,18 @@ public class MainActivity extends AppCompatActivity
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
                 String bleAddress=intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)));
-                passConnectionSucesstoFragmentScanForUIChange(bleAddress,false);
+              //  passConnectionSucesstoFragmentScanForUIChange(bleAddress,false);
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 System.out.println("MainActivity Device Service Discovered ");
 
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 String data=intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
                 System.out.println("MainActivity Device Data avaliable=  "+data);
-            }else if((action!=null)&&(action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)))){
-//                String connectedDeviceAddress=(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS));
+            }else if((action!=null)&&(action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)))||(action.equalsIgnoreCase(getResources().getString(R.string.CONNECTION_STATUS_BLE_DEVICE)))){
                 String bleAddress=intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)));
-                passConnectionSucesstoFragmentScanForUIChange(bleAddress,true);
+                boolean connectionStatus=intent.getBooleanExtra(getResources().getString(R.string.CONNECTION_STATUS_BLE_DEVICE),false);
+                System.out.println("--custom_broadCast-----> "+bleAddress);
+                passConnectionSucesstoFragmentScanForUIChange(bleAddress,connectionStatus);
             }
         }
         private void passConnectionSucesstoFragmentScanForUIChange(String connectedDeviceAddress,boolean connect_disconnect) {

@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">GoogleBLE</string>
     <string name="BLUETOOTHLE_SERVICE_BLE_ADDRESS">BLESERVICE_BLEADDRESS</string>
+    <string name="CONNECTION_STATUS_BLE_DEVICE">DEVICE_STATUS</string>
 </resources>
