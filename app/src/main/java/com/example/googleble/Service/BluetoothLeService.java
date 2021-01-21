@@ -90,13 +90,14 @@ public class BluetoothLeService extends Service {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
-                sendBraodCastConnectedDeviceToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress());
+                sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress());
                 mBluetoothGatt.discoverServices();
                 broadcastUpdate(intentAction);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
                 broadcastUpdate(intentAction);
+                sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress());
             }
         }
 
@@ -173,7 +174,7 @@ public class BluetoothLeService extends Service {
         sendBroadcast(intent);
     }
 
-    private void sendBraodCastConnectedDeviceToMainActivty(final String action,String bleAddress){
+    private void sendDevice_StatusToMainActivty(final String action,String bleAddress){
         final Intent intent = new Intent(action);
        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS), bleAddress);
         sendBroadcast(intent);

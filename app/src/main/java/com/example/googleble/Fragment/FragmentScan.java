@@ -22,9 +22,10 @@ import com.example.googleble.BaseFragment.BaseFragment;
 import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.MainActivity;
 import com.example.googleble.R;
-import com.example.googleble.interfaceActivityFragment.PassConncetionSucessBleAddressToActivity_interface;
+import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
 import com.example.googleble.interfaceFragmentActivity.DeviceClikckedForConnection;
+import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 
 import java.util.ArrayList;
 
@@ -38,6 +39,7 @@ public class FragmentScan extends BaseFragment {
     RecyclerView fragmentScanRecycleView;
     private ArrayList<CustBluetootDevices> custBluetootDevicesArrayList=new ArrayList<CustBluetootDevices>();
     DeviceClikckedForConnection deviceClikckedForConnectionInterface;
+    DeviceConnectDisconnect deviceConnectDisconnect;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -66,15 +68,30 @@ public class FragmentScan extends BaseFragment {
         my_fragmentScanAdapter.setOnItemClickLIstner(new FragmentScanAdapter.ScanOnItemClickInterface() {
             @Override
             public void ClickedItem(CustBluetootDevices custBluetootDevices, int positionClicked) {
-                    if(deviceClikckedForConnectionInterface!=null){
-                        deviceClikckedForConnectionInterface.connectToDevice(custBluetootDevices);
-                    }
+               /*     if(deviceClikckedForConnectionInterface!=null){
+                        if(custBluetootDevices.isConnected()){
+
+                        }else if(!custBluetootDevices.isConnected()){
+                            deviceClikckedForConnectionInterface.connectToDevice(custBluetootDevices);
+                        }
+
+                    }*/
+
+                                        if(deviceConnectDisconnect!=null){
+                                            if(custBluetootDevices.isConnected()){
+                                                deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices,false);
+                                            }else if(!custBluetootDevices.isConnected()){
+                                                deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices,true);
+                                            }
+                                        }
             }
+
         });
     }
 
     private void interfaceIntialization(){
     deviceClikckedForConnectionInterface=(DeviceClikckedForConnection)getActivity();
+    deviceConnectDisconnect=(DeviceConnectDisconnect)getActivity();
 }
 
 
@@ -166,20 +183,32 @@ public class FragmentScan extends BaseFragment {
                 };
             }
         });
-        myMainActivity.setupPassConncetionSucessBleAddressToActivity_interface(new PassConncetionSucessBleAddressToActivity_interface() {
+
+        myMainActivity.setupPassConnectionStatusToFragment(new PassConnectionStatusToFragment() {
             @Override
-            public void connectionSucessACK_ActivityToFragment(String bleAddress) {
-                CustBluetootDevices custBluetootDevices=new CustBluetootDevices();
-                custBluetootDevices.setBleAddress(bleAddress);
-                System.out.println("Fragment Scan= "+custBluetootDevicesArrayList.contains(custBluetootDevices));
-                if(custBluetootDevicesArrayList.contains(custBluetootDevices)){
-                    int postion= custBluetootDevicesArrayList.indexOf(custBluetootDevices);
-                   CustBluetootDevices custBluetootDevices1= custBluetootDevicesArrayList.get(postion);
-                   custBluetootDevices1.setConnected(true);
-                   my_fragmentScanAdapter.notifyItemChanged(postion);
+            public void connectDisconnect(String bleAddress, boolean connected_disconnected) {
+                if(connected_disconnected){
+                    CustBluetootDevices custBluetootDevices=new CustBluetootDevices();
+                    custBluetootDevices.setBleAddress(bleAddress);
+                    if(custBluetootDevicesArrayList.contains(custBluetootDevices)){
+                        int postion= custBluetootDevicesArrayList.indexOf(custBluetootDevices);
+                        CustBluetootDevices custBluetootDevices1= custBluetootDevicesArrayList.get(postion);
+                        custBluetootDevices1.setConnected(true);
+                        my_fragmentScanAdapter.notifyItemChanged(postion);
+                    }
+                }else {
+                    CustBluetootDevices custBluetootDevices=new CustBluetootDevices();
+                    custBluetootDevices.setBleAddress(bleAddress);
+                    if(custBluetootDevicesArrayList.contains(custBluetootDevices)){
+                        int postion= custBluetootDevicesArrayList.indexOf(custBluetootDevices);
+                        CustBluetootDevices custBluetootDevices1= custBluetootDevicesArrayList.get(postion);
+                        custBluetootDevices1.setConnected(false);
+                        my_fragmentScanAdapter.notifyItemChanged(postion);
+                    }
                 }
             }
         });
+
     }
 
     private void setUpRecycleView(){
