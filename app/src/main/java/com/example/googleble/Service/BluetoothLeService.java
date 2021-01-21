@@ -21,7 +21,9 @@ import androidx.annotation.RequiresApi;
 
 import com.example.googleble.R;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import static com.example.googleble.UUID.FirmwareUUID.CLIENT_CHARACTERISTIC_CONFIG;
 import static com.example.googleble.UUID.FirmwareUUID.GEO_FENCE_CHARCTERSTICS_UUID;
@@ -47,10 +49,18 @@ public class BluetoothLeService extends Service {
     public final static String EXTRA_DATA =
             "com.example.googleble.le.EXTRA_DATA";
 
+    private Map<String, BluetoothGatt> mutlipleBluetooDeviceGhatt;
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mutlipleBluetooDeviceGhatt = new HashMap<String, BluetoothGatt>();
+    }
     /**
      * Service IBinder to get the data to transfer the data.
      */
     private final IBinder mBinder = new LocalBinder();
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
