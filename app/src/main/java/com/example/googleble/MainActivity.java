@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment.toString().equalsIgnoreCase(new FragmentScan().toString())) {
-
         }else if(fragment.toString().equalsIgnoreCase(new FragmentData().toString())){
             replaceFragmentTransaction(new FragmentScan(),null);
         }

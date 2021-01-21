@@ -66,6 +66,7 @@ public class FragmentScan extends BaseFragment {
         interfaceImplementationCallBack();
         setUpRecycleView();
         fragmentSscaAdapterInterfaceImplementation();
+        getListOfConnectedDevices();
         return fragmenScanView;
     }
 
@@ -147,11 +148,10 @@ public class FragmentScan extends BaseFragment {
 
         switch (item.getItemId()) {
             case R.id.stop_item:
-                Toast.makeText(getActivity(), "Stop", Toast.LENGTH_SHORT).show();
 
                 return true;
             case R.id.scan_item:
-                Toast.makeText(getActivity(), "Scan", Toast.LENGTH_SHORT).show();
+                myMainActivity.scanLeDevice();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -202,7 +202,7 @@ public class FragmentScan extends BaseFragment {
                         CustBluetootDevices custBluetootDevices1 = custBluetootDevicesArrayList.get(postion);
                         custBluetootDevices1.setConnected(true);
                         my_fragmentScanAdapter.notifyItemChanged(postion);
-                     //   myMainActivity.replaceFragmentTransaction(new FragmentData(),null);
+                        myMainActivity.replaceFragmentTransaction(new FragmentData(),null);
                     }
                 } else {
                     CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
@@ -227,16 +227,24 @@ public class FragmentScan extends BaseFragment {
     }
 
     private void getListOfConnectedDevices() {
-        List<BluetoothDevice> connectedDevicesList = myMainActivity.mBluetoothLeService.getListOfConnectedDevices();
-        for (BluetoothDevice bluetoothDevice : connectedDevicesList) {
-            CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
-            custBluetootDevices.setBleAddress(bluetoothDevice.getAddress());
-            if (bluetoothDevice.getName() != null) {
-                custBluetootDevices.setDeviceName(bluetoothDevice.getName());
-            } else {
-                custBluetootDevices.setDeviceName("NA");
+        if(myMainActivity.mBluetoothLeService!=null){
+            List<BluetoothDevice> connectedDevicesList = myMainActivity.mBluetoothLeService.getListOfConnectedDevices();
+            if((connectedDevicesList!=null)&&(connectedDevicesList.size()>0)){
+                for (BluetoothDevice bluetoothDevice : connectedDevicesList) {
+                    CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
+                    custBluetootDevices.setBleAddress(bluetoothDevice.getAddress());
+                    custBluetootDevices.setConnected(true);
+                    if (bluetoothDevice.getName() != null) {
+                        custBluetootDevices.setDeviceName(bluetoothDevice.getName());
+                    } else {
+                        custBluetootDevices.setDeviceName("NA");
+                    }
+                    custBluetootDevicesArrayList.add(custBluetootDevices);
+                    my_fragmentScanAdapter.notifyDataSetChanged();
+                }
             }
         }
+
     }
 
 }

@@ -329,7 +329,8 @@ public class BluetoothLeService extends Service {
     }
 
     public List<BluetoothDevice> getListOfConnectedDevices(){
-      return   mBluetoothGatt.getConnectedDevices();
+        return    mBluetoothManager.getConnectedDevices(7);
+//      return   mBluetoothGatt.getConnectedDevices();
     }
 
 
