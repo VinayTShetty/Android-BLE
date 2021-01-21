@@ -67,8 +67,8 @@ public class FragmentScan extends BaseFragment {
         interfaceImplementationCallBack();
         setUpRecycleView();
         fragmentSscaAdapterInterfaceImplementation();
-        checkPermissionGiven();
         getListOfConnectedDevices();
+        checkPermissionGiven();
         return fragmenScanView;
     }
 
@@ -254,7 +254,8 @@ public class FragmentScan extends BaseFragment {
     }
 
     private void checkPermissionGiven() {
-        if (isVisible()) {
+        if (true) {
+            System.out.println("SCAN VISIBLE");
             if (ContextCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
@@ -262,6 +263,8 @@ public class FragmentScan extends BaseFragment {
             } else {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LocationPermissionRequestCode);
             }
+        }else {
+            System.out.println("SCAN NOT VISIBLE");
         }
     }
 
