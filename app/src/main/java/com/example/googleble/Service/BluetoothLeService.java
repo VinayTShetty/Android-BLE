@@ -28,6 +28,8 @@ import java.util.UUID;
 import static com.example.googleble.UUID.FirmwareUUID.CLIENT_CHARACTERISTIC_CONFIG;
 import static com.example.googleble.UUID.FirmwareUUID.GEO_FENCE_CHARCTERSTICS_UUID;
 import static com.example.googleble.UUID.FirmwareUUID.GEO_FENCE_SERVICE_UUID;
+import static com.example.googleble.Utility.UtilityHelper.ble_on_off;
+
 public class BluetoothLeService extends Service {
     private final static String TAG = BluetoothLeService.class.getSimpleName();
     private BluetoothManager mBluetoothManager;
@@ -96,15 +98,27 @@ public class BluetoothLeService extends Service {
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            BluetoothDevice bleDevice=gatt.getDevice();
+            String bleAddress=bleDevice.getAddress();
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+                if(!mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
+                    mutlipleBluetooDeviceGhatt.put(bleAddress,gatt);
+                }
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
                 sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress(),true);
                 mBluetoothGatt.discoverServices();
                 broadcastUpdate(intentAction);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                intentAction = ACTION_GATT_DISCONNECTED;
+                if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
+                    BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddress);
+                    if( bluetoothGatt != null ){
+                        bluetoothGatt.close();
+                        bluetoothGatt = null;
+                    }
+                    mutlipleBluetooDeviceGhatt.remove(bleAddress);
+                    intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
                 sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress(),false);
                 broadcastUpdate(intentAction);
@@ -340,9 +354,24 @@ public class BluetoothLeService extends Service {
 
     public List<BluetoothDevice> getListOfConnectedDevices(){
         return    mBluetoothManager.getConnectedDevices(7);
-//      return   mBluetoothGatt.getConnectedDevices();
     }
 
+
+    private boolean checkDeviceIsAlreadyConnected(String bleAddressToCheckConnectionStatus){
+        boolean result=false;
+        if(ble_on_off()){
+            BluetoothDevice device=  mBluetoothAdapter.getRemoteDevice(bleAddressToCheckConnectionStatus);
+            int connectionStatus=mBluetoothManager.getConnectionState(device, BluetoothProfile.GATT);
+            if(connectionStatus==BluetoothProfile.STATE_DISCONNECTED){
+                    //connect your Device.
+            }else if(connectionStatus==BluetoothProfile.STATE_CONNECTED){
+                // already connected...
+            }
+        }else {
+            result=false;
+        }
+        return result;
+    }
 
 
 }
