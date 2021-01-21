@@ -145,25 +145,17 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            System.out.println("------------------->"+action);
             if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
                 mConnected = true;
                 invalidateOptionsMenu();
-                System.out.println("MainActivity Device Connected ");
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
-                String bleAddress=intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)));
-              //  passConnectionSucesstoFragmentScanForUIChange(bleAddress,false);
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-                System.out.println("MainActivity Device Service Discovered ");
-
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
                 String data=intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
-                System.out.println("MainActivity Device Data avaliable=  "+data);
             }else if((action!=null)&&(action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)))||(action.equalsIgnoreCase(getResources().getString(R.string.CONNECTION_STATUS_BLE_DEVICE)))){
                 String bleAddress=intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)));
                 boolean connectionStatus=intent.getBooleanExtra(getResources().getString(R.string.CONNECTION_STATUS_BLE_DEVICE),false);
-                System.out.println("--custom_broadCast-----> "+bleAddress);
                 passConnectionSucesstoFragmentScanForUIChange(bleAddress,connectionStatus);
             }
         }

@@ -98,6 +98,9 @@ public class BluetoothLeService extends Service {
                 mConnectionState = STATE_DISCONNECTED;
                 sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress(),false);
                 broadcastUpdate(intentAction);
+            }else {
+                System.out.println("BLE_SERVICE STATUS= "+status);
+                System.out.println("BLE_SERVICE NEW STATE = "+newState);
             }
         }
 
