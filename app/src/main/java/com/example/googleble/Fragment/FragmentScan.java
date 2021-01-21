@@ -258,8 +258,7 @@ public class FragmentScan extends BaseFragment {
         if (isAdded()) {
             System.out.println("SCAN VISIBLE");
             if (ContextCompat.checkSelfPermission(getActivity(),
-                    Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         myMainActivity.start_stop_scan();
             } else {
                 requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LocationPermissionRequestCode);
