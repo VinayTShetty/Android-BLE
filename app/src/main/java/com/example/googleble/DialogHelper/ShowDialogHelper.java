@@ -6,10 +6,6 @@ import android.content.DialogInterface;
 
 
 import androidx.appcompat.app.AlertDialog;
-
-import com.example.googleble.R;
-
-
 public class ShowDialogHelper {
     Activity mActivity;
     Dialog mAlertDialog;
@@ -22,7 +18,6 @@ public class ShowDialogHelper {
                 @Override
                 public void run() {
                     if (mAlertDialog != null && mAlertDialog.isShowing()) {
-
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                         builder.setMessage(message).setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -33,12 +28,7 @@ public class ShowDialogHelper {
                         });
                         mAlertDialog = builder.create();
                         mAlertDialog.show();
-
                     }
-
-
-
-
                 }
             });
         }
