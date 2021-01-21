@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity
      */
     PassScanDeviceToActivity_interface passScanDeviceToActivity_interface;
     PassConnectionStatusToFragment passConnectionStatusToFragment;
+    public static  String SCAN_TAG="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity
                mBluetoothLeService.sendDataToBleDevice(test.getBytes());
             }
         });*/
-        scanLeDevice();
+        //scanLeDevice();
         replaceFragmentTransaction(new FragmentScan(),null);
     }
 
@@ -212,6 +213,28 @@ public class MainActivity extends AppCompatActivity
             mScanning = false;
             bluetoothLeScanner.stopScan(leScanCallback);
         }
+    }
+
+    public void start_stop_scan(){
+        if(SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STOPED))||(SCAN_TAG.equalsIgnoreCase(""))){
+            startScan();
+        }
+    }
+
+    private void startScan(){
+        SCAN_TAG=getResources().getString(R.string.SCAN_STARTED);
+        bluetoothLeScanner.startScan(leScanCallback);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mScanning = false;
+                stopScan();
+            }
+        }, SCAN_PERIOD);
+    }
+    private void stopScan(){
+        SCAN_TAG=getResources().getString(R.string.SCAN_STOPED);
+        bluetoothLeScanner.stopScan(leScanCallback);
     }
 
     private ScanCallback leScanCallback =

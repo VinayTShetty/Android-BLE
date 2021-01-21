@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -66,6 +67,7 @@ public class FragmentScan extends BaseFragment {
         interfaceImplementationCallBack();
         setUpRecycleView();
         fragmentSscaAdapterInterfaceImplementation();
+        checkPermissionGiven();
         getListOfConnectedDevices();
         return fragmenScanView;
     }
@@ -145,13 +147,13 @@ public class FragmentScan extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
         switch (item.getItemId()) {
             case R.id.stop_item:
-
                 return true;
             case R.id.scan_item:
-                myMainActivity.scanLeDevice();
+                clearScannedDevices();
+                getListOfConnectedDevices();
+                myMainActivity.start_stop_scan();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -164,7 +166,7 @@ public class FragmentScan extends BaseFragment {
         switch (requestCode) {
             case LocationPermissionRequestCode:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    myMainActivity.scanLeDevice();
+                    myMainActivity.start_stop_scan();
                 } else {
                     askPermission();
                 }
@@ -245,6 +247,22 @@ public class FragmentScan extends BaseFragment {
             }
         }
 
+    }
+    private void clearScannedDevices(){
+        custBluetootDevicesArrayList.clear();
+        my_fragmentScanAdapter.notifyDataSetChanged();
+    }
+
+    private void checkPermissionGiven() {
+        if (isVisible()) {
+            if (ContextCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                        myMainActivity.start_stop_scan();
+            } else {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LocationPermissionRequestCode);
+            }
+        }
     }
 
 }
