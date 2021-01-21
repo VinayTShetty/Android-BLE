@@ -109,7 +109,7 @@ public class BluetoothLeService extends Service {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
-             //   enableChartersticNotification(gatt);
+               enableChartersticNotification(gatt);
             }
             Log.d(TAG,"onServicesDiscovered");
         }

@@ -205,7 +205,7 @@ public class FragmentScan extends BaseFragment {
                         CustBluetootDevices custBluetootDevices1 = custBluetootDevicesArrayList.get(postion);
                         custBluetootDevices1.setConnected(true);
                         my_fragmentScanAdapter.notifyItemChanged(postion);
-                        myMainActivity.replaceFragmentTransaction(new FragmentData(),null);
+                     //   myMainActivity.replaceFragmentTransaction(new FragmentData(),null);
                     }
                 } else {
                     CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
