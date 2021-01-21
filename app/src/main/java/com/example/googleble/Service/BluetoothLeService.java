@@ -118,7 +118,8 @@ public class BluetoothLeService extends Service {
                         bluetoothGatt = null;
                     }
                     mutlipleBluetooDeviceGhatt.remove(bleAddress);
-                    intentAction = ACTION_GATT_DISCONNECTED;
+                }
+                intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
                 sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress(),false);
                 broadcastUpdate(intentAction);
