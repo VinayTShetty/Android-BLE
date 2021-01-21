@@ -1,53 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardCornerRadius="5dp"
-    android:layout_margin="3dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_margin="3dp"
+    app:cardCornerRadius="5dp">
     <LinearLayout
-        android:padding="10dp"
-        android:gravity="center_vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:src="@drawable/bluetooth_icon"
-            android:layout_width="20dp"
-            android:layout_height="20dp" />
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:padding="10dp">
         <RelativeLayout
-            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp">
+
             <TextView
                 android:id="@+id/ble_address"
-                android:textSize="18sp"
-                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="23:er:df:45:sr:rt"
                 android:textAllCaps="true"
-                android:layout_width="wrap_content"
-                android:textStyle="bold"
-                android:layout_height="wrap_content" />
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
             <TextView
                 android:id="@+id/device_name_text"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp"
-                android:layout_below="@+id/ble_address"
-                android:text="Device Name"
-                android:textStyle="bold"
-                android:textColor="@color/black"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ble_address"
+                android:layout_marginTop="2dp"
+                android:text="Device Name"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
             <Button
                 android:id="@+id/connect_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
                 android:backgroundTint="@color/black"
                 android:text="Connect"
-                android:textSize="12dp"
                 android:textAllCaps="false"
-                android:layout_alignParentRight="true"
-                >
-            </Button>
+                android:textSize="12dp"></Button>
         </RelativeLayout>
+        <LinearLayout
+            android:id="@+id/connection_layout_id"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/sendDataToBleDevice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="10dp"
+                android:backgroundTint="@color/black"
+                android:textStyle="bold"
+                android:layout_weight="1"
+                android:textAllCaps="false"
+                android:text="Send Data">
+            </Button>
+            <TextView
+                android:id="@+id/recievedataviaNotification"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="20dp"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:text="Recieve Data">
+            </TextView>
+        </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

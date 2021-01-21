@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -46,11 +47,13 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
         TextView bleAddress_textView;
         TextView device_name;
         Button connectButton_button;
+        LinearLayout connectionLayout;
         public ScanItemViewHolder(@NonNull View itemView) {
             super(itemView);
             this.bleAddress_textView=(TextView)itemView.findViewById(R.id.ble_address);
             this.connectButton_button=(Button)itemView.findViewById(R.id.connect_button);
             this.device_name=(TextView)itemView.findViewById(R.id.device_name_text);
+            this.connectionLayout=(LinearLayout)itemView.findViewById(R.id.connection_layout_id);
         }
 
         @Override
@@ -64,9 +67,11 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
             if(custBluetootDevices.isConnected()){
                 connectButton_button.setText("DisConnect");
                 connectButton_button.setTextColor(context.getResources().getColor(R.color.connect_color));
+                connectionLayout.setVisibility(View.VISIBLE);
             }else if(!(custBluetootDevices.isConnected())){
                 connectButton_button.setText("Connecet");
                 connectButton_button.setTextColor(context.getResources().getColor(R.color.disconnect_color));
+                connectionLayout.setVisibility(View.GONE);
             }
 
             scanItemViewHolder.connectButton_button.setOnClickListener(new View.OnClickListener() {
