@@ -22,16 +22,15 @@ import android.os.Handler;
 import android.os.IBinder;
 
 import com.example.googleble.CustomObjects.CustBluetootDevices;
+import com.example.googleble.Fragment.FragmentData;
 import com.example.googleble.Fragment.FragmentScan;
 import com.example.googleble.Service.BluetoothLeService;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
-import com.example.googleble.interfaceFragmentActivity.DeviceClikckedForConnection;
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 
 public class MainActivity extends AppCompatActivity
         implements
-        DeviceClikckedForConnection,
         DeviceConnectDisconnect {
     /**
      *BluetoothLeService class Variables.
@@ -118,6 +117,17 @@ public class MainActivity extends AppCompatActivity
         unbindService(serviceConnection);
         mBluetoothLeService = null;
     }
+
+    @Override
+    public void onBackPressed() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (fragment.toString().equalsIgnoreCase(new FragmentScan().toString())) {
+
+        }else if(fragment.toString().equalsIgnoreCase(new FragmentData().toString())){
+            replaceFragmentTransaction(new FragmentScan(),null);
+        }
+    }
+
     /**
      * Code to manage Service life Cycle.
      */
@@ -265,12 +275,6 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
-
-    @Override
-    public void connectToDevice(CustBluetootDevices custBluetootDevices) {
-        mBluetoothLeService.connect(custBluetootDevices.getBleAddress());
-    }
-
     @Override
     public void makeDevieConnecteDisconnect(CustBluetootDevices custBluetootDevices, boolean connect_disconnect) {
         if(connect_disconnect){
@@ -279,4 +283,5 @@ public class MainActivity extends AppCompatActivity
             mBluetoothLeService.disconnect();
         }
     }
+
 }

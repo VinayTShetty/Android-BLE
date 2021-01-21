@@ -328,6 +328,10 @@ public class BluetoothLeService extends Service {
         mBluetoothGatt.readCharacteristic(characteristic);
     }
 
+    public List<BluetoothDevice> getListOfConnectedDevices(){
+      return   mBluetoothGatt.getConnectedDevices();
+    }
+
 
 
 }
