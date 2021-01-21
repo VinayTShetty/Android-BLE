@@ -148,12 +148,10 @@ public class FragmentScan extends BaseFragment {
         switch (item.getItemId()) {
             case R.id.stop_item:
                 Toast.makeText(getActivity(), "Stop", Toast.LENGTH_SHORT).show();
-                //showDialogHelper.errorDialog("Turn on Bluetooth");
-                showDialogHelper.e(getActivity());
+
                 return true;
             case R.id.scan_item:
                 Toast.makeText(getActivity(), "Scan", Toast.LENGTH_SHORT).show();
-                showDialogHelper.errorDialog("Turn on Bluetooth");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
