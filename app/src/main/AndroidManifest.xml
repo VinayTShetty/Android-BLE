@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.googleble">
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <!-- Required only if your app isn't using the Device Companion Manager. -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <!--Read external Storage-->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
+
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- Required only if your app isn't using the Device Companion Manager. -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- Read external Storage -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/bluetooth_icon"
@@ -14,15 +14,19 @@
         android:roundIcon="@drawable/bluetooth_icon"
         android:supportsRtl="true"
         android:theme="@style/Theme.GoogleBLE">
+        <activity android:name=".NotificationActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".Service.BluetoothLeService" android:enabled="true" />
-        <service android:name=".Service.DfuService"
-            android:enabled="true">
-        </service>
+
+        <service
+            android:name=".Service.BluetoothLeService"
+            android:enabled="true" />
+        <service android:name=".Service.DfuService"></service>
     </application>
+
 </manifest>

@@ -317,24 +317,27 @@ public class MainActivity extends AppCompatActivity
     private Uri fileStreamUri;
     public void dfuupdate(){
         final DfuServiceInitiator starter = new DfuServiceInitiator("D4:A6:CB:43:B6:70")
-                .setDeviceName("Succorfish SC2")
-                .setKeepBond(true);
-
-        starter.setUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true);
+                .setDeviceName("Succorfish SC2");
 
         starter.setPrepareDataObjectDelay(300L);
 
         if (0 == DfuService.TYPE_AUTO)
             starter.setZip(fileStreamUri, null);
         else {
-           //   starter.setBinOrHex(0, mFileStreamUri, mFilePath).setInitFile(mInitFileStreamUri, mInitFilePath);
+            //  starter.setBinOrHex(0, mFileStreamUri, mFilePath).setInitFile(mInitFileStreamUri, mInitFilePath);
         }
-        final DfuServiceController controller = starter.start(this, DfuService.class);
+       starter.start(this, DfuService.class);
+
     }
+
+Uri uri;
+private String filepath;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        System.out.println("DATA "+data.getData());
+        uri=data.getData();
+        filepath=uri.getPath();
     }
 }

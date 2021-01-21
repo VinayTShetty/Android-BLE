@@ -46,12 +46,15 @@ public class FragmentData extends BaseFragment {
             @Override
             public void onClick(View v) {
                 System.out.println("Hello world");
+                myMainActivity.dfuupdate();
             }
         });
         selectfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+               Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                startActivityForResult(intent, 7);
             }
         });
     }
