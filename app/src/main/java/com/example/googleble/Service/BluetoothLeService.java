@@ -104,11 +104,12 @@ public class BluetoothLeService extends Service {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 if(!mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     mutlipleBluetooDeviceGhatt.put(bleAddress,gatt);
+                    mutlipleBluetooDeviceGhatt.get(bleAddress).discoverServices();
                 }
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
                 sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress(),true);
-                mBluetoothGatt.discoverServices();
+//                mBluetoothGatt.discoverServices();
                 broadcastUpdate(intentAction);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
@@ -134,9 +135,9 @@ public class BluetoothLeService extends Service {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
-               enableChartersticNotification(gatt);
+             //  enableChartersticNotification(gatt);
             }
-            Log.d(TAG,"onServicesDiscovered");
+            Log.d(TAG,"onServicesDiscovered ToString "+gatt.toString()+" HashCode "+gatt.hashCode()+" BLE ADDRESS= "+gatt.getDevice().getAddress());
         }
 
         @Override
