@@ -12,5 +12,15 @@
         android:textAllCaps="false"
         android:textSize="30dp">
     </Button>
+    <Button
+        android:id="@+id/select_file"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select file"
+        android:layout_below="@+id/dfu_update"
+        android:layout_centerInParent="true"
+        android:textSize="30dp"
+        >
+    </Button>
 
 </RelativeLayout>

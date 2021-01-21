@@ -1,6 +1,8 @@
 package com.example.googleble.Fragment;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +19,7 @@ import com.example.googleble.R;
 public class FragmentData extends BaseFragment {
     View fragmentDataView;
     MainActivity myMainActivity;
-    Button dfuUpdate;
+    Button dfuUpdate,selectfile;
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -34,6 +36,7 @@ public class FragmentData extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         fragmentDataView = inflater.inflate(R.layout.fragment_data, container, false);
         dfuUpdate=(Button)fragmentDataView.findViewById(R.id.dfu_update);
+        selectfile=(Button)fragmentDataView.findViewById(R.id.select_file);
         buttonCliclistner();
         return fragmentDataView;
     }
@@ -43,6 +46,12 @@ public class FragmentData extends BaseFragment {
             @Override
             public void onClick(View v) {
                 System.out.println("Hello world");
+            }
+        });
+        selectfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
@@ -80,5 +89,13 @@ public class FragmentData extends BaseFragment {
     @Override
     public String toString() {
         return FragmentData.class.getSimpleName();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        final Uri uri = data.getData();
+        System.out.println("uri "+uri);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.googleble;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -16,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,9 +27,15 @@ import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.Fragment.FragmentData;
 import com.example.googleble.Fragment.FragmentScan;
 import com.example.googleble.Service.BluetoothLeService;
+import com.example.googleble.Service.DfuService;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
+
+import java.io.File;
+
+import no.nordicsemi.android.dfu.DfuServiceController;
+import no.nordicsemi.android.dfu.DfuServiceInitiator;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -306,8 +314,27 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * test commit
-     */
+    private Uri fileStreamUri;
+    public void dfuupdate(){
+        final DfuServiceInitiator starter = new DfuServiceInitiator("D4:A6:CB:43:B6:70")
+                .setDeviceName("Succorfish SC2")
+                .setKeepBond(true);
 
+        starter.setUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true);
+
+        starter.setPrepareDataObjectDelay(300L);
+
+        if (0 == DfuService.TYPE_AUTO)
+            starter.setZip(fileStreamUri, null);
+        else {
+           //   starter.setBinOrHex(0, mFileStreamUri, mFilePath).setInitFile(mInitFileStreamUri, mInitFilePath);
+        }
+        final DfuServiceController controller = starter.start(this, DfuService.class);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
 }
