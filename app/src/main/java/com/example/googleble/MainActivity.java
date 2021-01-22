@@ -1,5 +1,6 @@
 package com.example.googleble;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,8 +35,11 @@ import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 
 import java.io.File;
 
+import no.nordicsemi.android.dfu.DfuProgressListener;
+import no.nordicsemi.android.dfu.DfuProgressListenerAdapter;
 import no.nordicsemi.android.dfu.DfuServiceController;
 import no.nordicsemi.android.dfu.DfuServiceInitiator;
+import no.nordicsemi.android.dfu.DfuServiceListenerHelper;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -108,12 +112,14 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         registerReceiver(bluetootServiceRecieverData, makeGattUpdateIntentFilter());
+        DfuServiceListenerHelper.registerProgressListener(this, dfuProgressListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(bluetootServiceRecieverData);
+        DfuServiceListenerHelper.unregisterProgressListener(this, dfuProgressListener);
     }
 
     @Override
@@ -343,4 +349,68 @@ private String filepath;
         filepath=uri.getPath();
         filepath=uri.getPath();
     }
+
+
+
+    private final DfuProgressListener dfuProgressListener=new DfuProgressListener() {
+        @Override
+        public void onDeviceConnecting(@NonNull String s) {
+            System.out.println("DFU_TESTING onDeviceConnecting");
+        }
+
+        @Override
+        public void onDeviceConnected(@NonNull String s) {
+            System.out.println("DFU_TESTING onDeviceConnected");
+        }
+
+        @Override
+        public void onDfuProcessStarting(@NonNull String s) {
+            System.out.println("DFU_TESTING onDfuProcessStarting");
+        }
+
+        @Override
+        public void onDfuProcessStarted(@NonNull String s) {
+            System.out.println("DFU_TESTING onDfuProcessStarted");
+        }
+
+        @Override
+        public void onEnablingDfuMode(@NonNull String s) {
+            System.out.println("DFU_TESTING onEnablingDfuMode");
+        }
+
+        @Override
+        public void onProgressChanged(@NonNull String s, int i, float v, float v1, int i1, int i2) {
+            System.out.println("DFU_TESTING onProgressChanged");
+        }
+
+        @Override
+        public void onFirmwareValidating(@NonNull String s) {
+            System.out.println("DFU_TESTING onFirmwareValidating");
+        }
+
+        @Override
+        public void onDeviceDisconnecting(String s) {
+            System.out.println("DFU_TESTING onDeviceDisconnecting");
+        }
+
+        @Override
+        public void onDeviceDisconnected(@NonNull String s) {
+            System.out.println("DFU_TESTING onDeviceDisconnected");
+        }
+
+        @Override
+        public void onDfuCompleted(@NonNull String s) {
+            System.out.println("DFU_TESTING onDfuCompleted");
+        }
+
+        @Override
+        public void onDfuAborted(@NonNull String s) {
+            System.out.println("DFU_TESTING onDfuAborted");
+        }
+
+        @Override
+        public void onError(@NonNull String s, int i, int i1, String s1) {
+            System.out.println("DFU_TESTING onError");
+        }
+    };
 }
