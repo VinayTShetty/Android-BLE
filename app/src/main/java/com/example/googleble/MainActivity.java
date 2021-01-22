@@ -322,9 +322,9 @@ public class MainActivity extends AppCompatActivity
         starter.setPrepareDataObjectDelay(300L);
 
         if (0 == DfuService.TYPE_AUTO)
-            starter.setZip(fileStreamUri, null);
+            starter.setZip(fileStreamUri, filepath);
         else {
-            //  starter.setBinOrHex(0, mFileStreamUri, mFilePath).setInitFile(mInitFileStreamUri, mInitFilePath);
+              starter.setBinOrHex(0, uri, filepath).setInitFile(uri, filepath);
         }
        starter.start(this, DfuService.class);
 
@@ -338,6 +338,8 @@ private String filepath;
         super.onActivityResult(requestCode, resultCode, data);
         System.out.println("DATA "+data.getData());
         uri=data.getData();
+        fileStreamUri=data.getData();
+        filepath=uri.getPath();
         filepath=uri.getPath();
     }
 }
