@@ -317,6 +317,7 @@ public class MainActivity extends AppCompatActivity
     private Uri fileStreamUri;
     public void dfuupdate(){
         final DfuServiceInitiator starter = new DfuServiceInitiator("D4:A6:CB:43:B6:70")
+                .setForeground(false)
                 .setDeviceName("Succorfish SC2");
 
         starter.setPrepareDataObjectDelay(300L);
