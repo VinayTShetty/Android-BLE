@@ -28,17 +28,16 @@ import com.example.googleble.Service.BluetoothLeService;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
+import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
 
 public class MainActivity extends AppCompatActivity
         implements
-        DeviceConnectDisconnect {
+        DeviceConnectDisconnect,
+        SendDataToBleDevice {
     /**
      *BluetoothLeService class Variables.
      */
     public BluetoothLeService mBluetoothLeService;
-    String mDeviceAddress="D4:A6:CB:43:B6:70";
-/*    Button demoapplicaiton,sendCommand;*/
-
 
     /**
      *Scan for the Ble Devices.
@@ -66,27 +65,6 @@ public class MainActivity extends AppCompatActivity
         interfaceIntialization();
         bindBleServiceToMainActivity();
         intializeFragmentManager();
-      /*  demoapplicaiton=(Button) findViewById(R.id.demo_applciaiton);
-        sendCommand=(Button) findViewById(R.id.send_command);*/
-
-      /*  demoapplicaiton.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-                    mBluetoothLeService.connect(mDeviceAddress);
-                }
-            }
-        });
-
-        sendCommand.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String test="smpon";
-               mBluetoothLeService.sendDataToBleDevice(test.getBytes());
-            }
-        });*/
-        //scanLeDevice();
         replaceFragmentTransaction(new FragmentScan(),null);
     }
 
@@ -139,7 +117,6 @@ public class MainActivity extends AppCompatActivity
             if (!mBluetoothLeService.initialize()) {
                 finish();
             }
-          // mBluetoothLeService.connect(mDeviceAddress);
         }
 
         @Override
@@ -306,4 +283,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void parseDataToBleDevice(CustBluetootDevices custBluetootDevices, byte[] dataToSend) {
+        mBluetoothLeService.sendDataToBleDevice(custBluetootDevices.getBleAddress(),dataToSend);
+    }
 }

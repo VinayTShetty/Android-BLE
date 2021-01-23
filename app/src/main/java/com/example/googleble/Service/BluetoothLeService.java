@@ -271,7 +271,7 @@ public class BluetoothLeService extends Service {
         characteristic.setValue(data);
         boolean status=false;
         status=mBluetoothGatt.writeCharacteristic(characteristic);
-        System.out.println("Send Data to BLE Device = Status= "+status+" BleAddress= "+bleAddress+" Value= "+String.format("%02x", data));
+        System.out.println("Send Data to BLE Device = Status= "+status+" BleAddress= "+bleAddress+" Value= "+new String(data));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)

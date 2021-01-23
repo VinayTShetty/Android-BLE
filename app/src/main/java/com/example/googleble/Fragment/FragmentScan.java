@@ -29,6 +29,7 @@ import com.example.googleble.R;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
+import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
 import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.ArrayList;
@@ -44,7 +45,11 @@ public class FragmentScan extends BaseFragment {
     FragmentScanAdapter my_fragmentScanAdapter;
     RecyclerView fragmentScanRecycleView;
     private ArrayList<CustBluetootDevices> custBluetootDevicesArrayList = new ArrayList<CustBluetootDevices>();
+    /**
+     * interface intialization from FragmentToActivity
+     */
     DeviceConnectDisconnect deviceConnectDisconnect;
+    SendDataToBleDevice sendDataToBleDevice;
     ShowDialogHelper showDialogHelper;
     KProgressHUD progressDialog;
 
@@ -99,7 +104,9 @@ public class FragmentScan extends BaseFragment {
 
             @Override
             public void sendDataButtonClickedForItem(CustBluetootDevices custBluetootDevices, int positionClicked) {
-
+                                if(sendDataToBleDevice!=null){
+                                    sendDataToBleDevice.parseDataToBleDevice(custBluetootDevices,"SMPON".getBytes());
+                                }
             }
 
             @Override
@@ -112,6 +119,7 @@ public class FragmentScan extends BaseFragment {
 
     private void interfaceIntialization() {
         deviceConnectDisconnect = (DeviceConnectDisconnect) getActivity();
+        sendDataToBleDevice=(SendDataToBleDevice)getActivity();
         progressDialog=KProgressHUD.create(getActivity());
     }
     private void showProgressDialog(String bleAddress){
