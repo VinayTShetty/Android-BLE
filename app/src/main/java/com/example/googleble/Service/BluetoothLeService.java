@@ -104,13 +104,11 @@ public class BluetoothLeService extends Service {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 if(!mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     mutlipleBluetooDeviceGhatt.put(bleAddress,gatt);
-                    System.out.println("MULTIPLE_BLE_CONNECTION  onConnectionStateChange = BLE_ADDRESS= "+bleAddress+" Gatt hashCode= "+mutlipleBluetooDeviceGhatt.get(bleAddress).toString());
                     mutlipleBluetooDeviceGhatt.get(bleAddress).discoverServices();
                 }
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
                 sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress(),true);
-//                mBluetoothGatt.discoverServices();
                 broadcastUpdate(intentAction);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
@@ -211,8 +209,11 @@ public class BluetoothLeService extends Service {
        sendBroadcast(intent);
     }
 
-    private void sendConnectedDeviceAddressBroadCastToMainActivity(){
-
+    private void sendDataRecievedFromFirmware(final String action,final String bleaddress,final  byte byteArrayData[]){
+        final Intent intent = new Intent(action);
+        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS), bleAddress);
+        intent.putExtra(getResources().getString(R.string.CONNECTION_STATUS_BLE_DEVICE),connectionStatus);
+        sendBroadcast(intent);
     }
 
     private void broadcastUpdate(final String action, final BluetoothGattCharacteristic characteristic) {
