@@ -97,6 +97,16 @@ public class FragmentScan extends BaseFragment {
                 }
             }
 
+            @Override
+            public void sendDataButtonClickedForItem(CustBluetootDevices custBluetootDevices, int positionClicked) {
+
+            }
+
+            @Override
+            public void resetTextViewDataOnClickOfTextView(CustBluetootDevices custBluetootDevices, int positionClicked) {
+                custBluetootDevices.setDataObtained("");
+                my_fragmentScanAdapter.notifyItemChanged(positionClicked);
+            }
         });
     }
 
@@ -284,4 +294,7 @@ public class FragmentScan extends BaseFragment {
         }
     }
 
+    private void sendDataToBleDevice(){
+
+    }
 }

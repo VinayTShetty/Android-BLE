@@ -50,4 +50,5 @@ public class UtilityHelper {
         alert.setTitle("Permission Denied For Scanning");
         alert.show();
     }
+
 }
