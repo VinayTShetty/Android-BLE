@@ -75,7 +75,7 @@
                 android:textStyle="bold"
                 android:textAlignment="center"
                 android:textAllCaps="false"
-                android:text="Recieve Data">
+                android:text="">
             </TextView>
         </LinearLayout>
     </LinearLayout>

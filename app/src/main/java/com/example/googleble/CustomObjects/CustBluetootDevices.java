@@ -9,6 +9,7 @@ public class CustBluetootDevices {
     private String deviceName;
     private BluetoothDevice bluetoothDevice;
     private boolean isConnected;
+    private String dataObtained;
 
     public CustBluetootDevices(String bleAddress, String deviceName, BluetoothDevice bluetoothDevice, boolean isConnected) {
         this.bleAddress = bleAddress;
@@ -50,6 +51,14 @@ public class CustBluetootDevices {
 
     public void setConnected(boolean connected) {
         isConnected = connected;
+    }
+
+    public String getDataObtained() {
+        return dataObtained;
+    }
+
+    public void setDataObtained(String dataObtained) {
+        this.dataObtained = dataObtained;
     }
 
     /**

@@ -2,6 +2,7 @@ package com.example.googleble.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -48,12 +49,16 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
         TextView device_name;
         Button connectButton_button;
         LinearLayout connectionLayout;
+        Button sendDataButton;
+        TextView dataRecieveTextView;
         public ScanItemViewHolder(@NonNull View itemView) {
             super(itemView);
             this.bleAddress_textView=(TextView)itemView.findViewById(R.id.ble_address);
             this.connectButton_button=(Button)itemView.findViewById(R.id.connect_button);
             this.device_name=(TextView)itemView.findViewById(R.id.device_name_text);
             this.connectionLayout=(LinearLayout)itemView.findViewById(R.id.connection_layout_id);
+            this.sendDataButton=(Button) itemView.findViewById(R.id.sendDataToBleDevice);
+            this.dataRecieveTextView=(TextView) itemView.findViewById(R.id.recievedataviaNotification);
         }
 
         @Override
@@ -68,12 +73,19 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
                 connectButton_button.setText("DisConnect");
                 connectButton_button.setTextColor(context.getResources().getColor(R.color.connect_color));
                 connectionLayout.setVisibility(View.VISIBLE);
+                if(custBluetootDevices.getDataObtained()!=null){
+                    dataRecieveTextView.setText(custBluetootDevices.getDataObtained());
+                }
             }else if(!(custBluetootDevices.isConnected())){
                 connectButton_button.setText("Connecet");
                 connectButton_button.setTextColor(context.getResources().getColor(R.color.disconnect_color));
                 connectionLayout.setVisibility(View.GONE);
+                dataRecieveTextView.setText("");
             }
 
+            /**
+             * Connect/Disconnect button
+             */
             scanItemViewHolder.connectButton_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -82,11 +94,35 @@ public class FragmentScanAdapter extends RecyclerView.Adapter<FragmentScanAdapte
                     }
                 }
             });
+            /**
+             * Send data to Ble Device.
+             */
+            scanItemViewHolder.sendDataButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(scanOnItemClickInterface!=null){
+                        scanOnItemClickInterface.sendDataButtonClickedForItem(custBluetootDevices,getAdapterPosition());
+                    }
+                }
+            });
+            /**
+             * Reset data on click of TextView.
+             */
+            scanItemViewHolder.dataRecieveTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(scanOnItemClickInterface!=null){
+                        scanOnItemClickInterface.resetTextViewDataOnClickOfTextView(custBluetootDevices,getAdapterPosition());
+                    }
+                }
+            });
         }
     }
 
     public interface ScanOnItemClickInterface{
     public void ClickedItem(CustBluetootDevices custBluetootDevices,int positionClicked);
+    public void sendDataButtonClickedForItem(CustBluetootDevices custBluetootDevices,int positionClicked);
+    public void resetTextViewDataOnClickOfTextView(CustBluetootDevices custBluetootDevices,int positionClicked);
     }
     public void setOnItemClickLIstner(ScanOnItemClickInterface loc_scanOnItemClickInterface){
       this.scanOnItemClickInterface=loc_scanOnItemClickInterface;
