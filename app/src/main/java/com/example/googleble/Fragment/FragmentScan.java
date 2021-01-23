@@ -29,6 +29,7 @@ import com.example.googleble.R;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
+import com.kaopiz.kprogresshud.KProgressHUD;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +46,7 @@ public class FragmentScan extends BaseFragment {
     private ArrayList<CustBluetootDevices> custBluetootDevicesArrayList = new ArrayList<CustBluetootDevices>();
     DeviceConnectDisconnect deviceConnectDisconnect;
     ShowDialogHelper showDialogHelper;
+    KProgressHUD progressDialog;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -86,6 +88,7 @@ public class FragmentScan extends BaseFragment {
                         deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, false);
                     } else if (!custBluetootDevices.isConnected()) {
                         if(ble_on_off()){
+                            showProgressDialog(custBluetootDevices.getBleAddress());
                             deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, true);
                         }else {
                             showDialogHelper.errorDialog("Turn on Bluetooth");
@@ -99,6 +102,19 @@ public class FragmentScan extends BaseFragment {
 
     private void interfaceIntialization() {
         deviceConnectDisconnect = (DeviceConnectDisconnect) getActivity();
+        progressDialog=KProgressHUD.create(getActivity());
+    }
+    private void showProgressDialog(String bleAddress){
+        progressDialog.setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
+                        .setLabel("Please wait")
+                        .setDetailsLabel("Connecting To "+bleAddress)
+                        .setCancellable(false)
+                        .show();
+    }
+    private void cancelProgressDialog(){
+        if(progressDialog!=null&&progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
     }
 
 
@@ -205,6 +221,7 @@ public class FragmentScan extends BaseFragment {
                         CustBluetootDevices custBluetootDevices1 = custBluetootDevicesArrayList.get(postion);
                         custBluetootDevices1.setConnected(true);
                         my_fragmentScanAdapter.notifyItemChanged(postion);
+                        cancelProgressDialog();
                      //   myMainActivity.replaceFragmentTransaction(new FragmentData(),null);
                     }
                 } else {
@@ -256,7 +273,6 @@ public class FragmentScan extends BaseFragment {
 
     private void checkPermissionGiven() {
         if (isAdded()) {
-            System.out.println("SCAN VISIBLE");
             if (ContextCompat.checkSelfPermission(getActivity(),
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                         myMainActivity.start_stop_scan();

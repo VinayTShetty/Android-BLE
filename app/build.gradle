@@ -36,4 +36,10 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    /**
+     * Progress Dialog depedency
+     * link:-https://github.com/Kaopiz/KProgressHUD
+     */
+    implementation 'com.kaopiz:kprogresshud:1.2.0'
 }
