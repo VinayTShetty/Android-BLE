@@ -104,6 +104,7 @@ public class BluetoothLeService extends Service {
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 if(!mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     mutlipleBluetooDeviceGhatt.put(bleAddress,gatt);
+                    System.out.println("MULTIPLE_BLE_CONNECTION  onConnectionStateChange = BLE_ADDRESS= "+bleAddress+" Gatt hashCode= "+mutlipleBluetooDeviceGhatt.get(bleAddress).toString());
                     mutlipleBluetooDeviceGhatt.get(bleAddress).discoverServices();
                 }
                 intentAction = ACTION_GATT_CONNECTED;
@@ -153,6 +154,7 @@ public class BluetoothLeService extends Service {
             Log.d(TAG,"onCharacteristicWrite Write Type "+characteristic.getValue());
             Log.d(TAG,"onCharacteristicWrite Write Type "+status);
             Log.d(TAG,"onCharacteristicWrite Write Type "+new String(characteristic.getValue()));
+            System.out.println("MULTIPLE_BLE_CONNECTION  onConnectionStateChange = BLE_ADDRESS= "+gatt.getDevice().getAddress()+" Gatt hashCode= "+gatt.toString());
         }
 
         @Override
@@ -271,7 +273,7 @@ public class BluetoothLeService extends Service {
         boolean status=false;
         BluetoothGatt bluetoothGatt=  mutlipleBluetooDeviceGhatt.get(bleAddress);
         status=bluetoothGatt.writeCharacteristic(characteristic);
-        System.out.println("Send Data to BLE Device = Status= "+status+" BleAddress= "+bleAddress+" Value= "+new String(data));
+        System.out.println("MULTIPLE_BLE_CONNECTION = Status= "+status+" BleAddress= "+bleAddress+" Value= "+new String(data)+" Gatt HashCode= "+bluetoothGatt.toString());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -316,6 +318,7 @@ public class BluetoothLeService extends Service {
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
+        System.out.println("MULTIPLE_BLE_CONNECTION CONNECTION METHOD = BLE_ADDRESS= "+address+" Gatt hashCode= "+mBluetoothGatt.toString());
         return true;
     }
     /**
