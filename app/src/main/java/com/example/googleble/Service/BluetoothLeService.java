@@ -160,6 +160,7 @@ public class BluetoothLeService extends Service {
             broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             Log.d(TAG,"onCharacteristicChanged  "+characteristic.getStringValue(2));
             Log.d(TAG,"onCharacteristicChanged  "+new String(characteristic.getValue()));
+            System.out.println("onCharacteristicChanged executed");
         }
 
         @Override
@@ -268,7 +269,8 @@ public class BluetoothLeService extends Service {
         characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
         characteristic.setValue(data);
         boolean status=false;
-        status=mBluetoothGatt.writeCharacteristic(characteristic);
+        BluetoothGatt bluetoothGatt=  mutlipleBluetooDeviceGhatt.get(bleAddress);
+        status=bluetoothGatt.writeCharacteristic(characteristic);
         System.out.println("Send Data to BLE Device = Status= "+status+" BleAddress= "+bleAddress+" Value= "+new String(data));
     }
 
