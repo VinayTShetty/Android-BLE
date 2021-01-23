@@ -137,7 +137,6 @@ public class BluetoothLeService extends Service {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
                enableChartersticNotification(gatt);
             }
-            Log.d(TAG,"onServicesDiscovered ToString "+gatt.toString()+" HashCode "+gatt.hashCode()+" BLE ADDRESS= "+gatt.getDevice().getAddress());
         }
 
         @Override
@@ -145,7 +144,6 @@ public class BluetoothLeService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
             }
-            Log.d(TAG,"onCharacteristicRead");
         }
 
         @Override
