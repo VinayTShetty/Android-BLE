@@ -150,6 +150,13 @@ public class MainActivity extends AppCompatActivity
                 byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN));
                 int dataWrittenType = intent.getIntExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN_TYPE), -1);
                 Log.d(TAG,"Data Written ACK=  bleAddress= "+bleAddress+" DATA WRITTEN TYPE= "+dataWrittenType+" BYTE ARRAY IN HEX = "+String.format("%02x", dataWritten)+"");
+            }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED)))) {
+                /**
+                 * Data Obtained from the firmware.
+                 */
+                String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_BLE_ADDRESS));
+                byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_DATA_RECIEVED));
+                Log.d(TAG,"DATT OBTAINED FROM FIRMWARE BLE ADDRESS=  "+bleAddress+" "+" DATA OBTAINED FROM FIRMWARE= "+String.format("%02x", dataWritten));
             }
         }
 
