@@ -33,6 +33,9 @@ import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.bytesToHex;
+import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.convert_LongTo_4_bytes;
 import static com.example.googleble.Utility.UtilityHelper.ble_on_off;
 import static com.example.googleble.Utility.UtilityHelper.showPermissionDialog;
 
@@ -90,7 +93,6 @@ public class FragmentScan extends BaseFragment {
                     if (custBluetootDevices.isConnected()) {
                         showProgressDialog(custBluetootDevices.getBleAddress(),"Disonnecting ");
                         deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, false);
-                        System.out.println("CONNECT_DISCONNECT disconnectionFragmentScan");
                     } else if (!custBluetootDevices.isConnected()) {
                         if(ble_on_off()){
                             showProgressDialog(custBluetootDevices.getBleAddress(),"Connectiong ");
@@ -105,7 +107,8 @@ public class FragmentScan extends BaseFragment {
             @Override
             public void sendDataButtonClickedForItem(CustBluetootDevices custBluetootDevices, int positionClicked) {
                                 if(sendDataToBleDevice!=null){
-                                    sendDataToBleDevice.parseDataToBleDevice(custBluetootDevices,"SMPON".getBytes());
+                                    long timeStamp=System.currentTimeMillis()/1000;
+                                    sendDataToBleDevice.parseDataToBleDevice(custBluetootDevices,convert_LongTo_4_bytes(timeStamp));
                                 }
             }
 
@@ -276,8 +279,9 @@ public class FragmentScan extends BaseFragment {
                 if (custBluetootDevicesArrayList.contains(custBluetootDevices)) {
                     int postion = custBluetootDevicesArrayList.indexOf(custBluetootDevices);
                     CustBluetootDevices custBluetootDevices1 = custBluetootDevicesArrayList.get(postion);
-                    custBluetootDevices1.setDataObtained(""+new String(dataRecievedFromFirmware));
+                    custBluetootDevices1.setDataObtained(""+bytesToHex(dataRecievedFromFirmware));
                     my_fragmentScanAdapter.notifyItemChanged(postion);
+                    System.out.println("Convert Data Recieved From Firmware= "+bytesToHex(dataRecievedFromFirmware));
                 }
             }
         });

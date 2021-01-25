@@ -33,7 +33,6 @@ import com.example.googleble.interfaceActivityFragment.ShowDataForItemInRecycleV
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
 
-import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.convertByteArrayToHexString;
 import static com.example.googleble.Utility.UtilityHelper.ble_on_off;
 
 public class MainActivity extends AppCompatActivity
