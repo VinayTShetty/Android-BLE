@@ -109,7 +109,7 @@ public class BluetoothLeService extends Service {
                 }
                 intentAction = ACTION_GATT_CONNECTED;
                 mConnectionState = STATE_CONNECTED;
-                sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress(),true);
+                sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),gatt.getDevice().getAddress(),true);
                 broadcastUpdate(intentAction);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
@@ -122,7 +122,7 @@ public class BluetoothLeService extends Service {
                 }
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
-                sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS),gatt.getDevice().getAddress(),false);
+                sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),gatt.getDevice().getAddress(),false);
                 broadcastUpdate(intentAction);
             }else {
                 System.out.println("BLE_SERVICE STATUS= "+status);
@@ -202,8 +202,8 @@ public class BluetoothLeService extends Service {
 
     private void sendDevice_StatusToMainActivty(final String action,String bleAddress,boolean connectionStatus){
         final Intent intent = new Intent(action);
-       intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS), bleAddress);
-       intent.putExtra(getResources().getString(R.string.CONNECTION_STATUS_BLE_DEVICE),connectionStatus);
+       intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_BLE_ADDRESS), bleAddress);
+       intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_CONNECTED_DISCONNECTED),connectionStatus);
        sendBroadcast(intent);
     }
 
