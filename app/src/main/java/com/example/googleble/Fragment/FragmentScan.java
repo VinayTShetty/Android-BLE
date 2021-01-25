@@ -24,6 +24,7 @@ import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.DialogHelper.ShowDialogHelper;
 import com.example.googleble.MainActivity;
 import com.example.googleble.R;
+import com.example.googleble.interfaceActivityFragment.DeviceConnectionTimeOut;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
@@ -253,6 +254,18 @@ public class FragmentScan extends BaseFragment {
             }
         });
 
+        myMainActivity.setUpDeviceConnectionTimeOut(new DeviceConnectionTimeOut() {
+            @Override
+            public void connectionTimeOutTimer(boolean result) {
+                if(result){
+                    cancelProgressDialog();
+                    custBluetootDevicesArrayList.clear();
+                    getListOfConnectedDevices();
+                    myMainActivity.start_stop_scan();
+                }
+            }
+        });
+
     }
 
     private void setUpRecycleView() {
@@ -263,24 +276,28 @@ public class FragmentScan extends BaseFragment {
     }
 
     private void getListOfConnectedDevices() {
-        if(myMainActivity.mBluetoothLeService!=null){
-            List<BluetoothDevice> connectedDevicesList = myMainActivity.mBluetoothLeService.getListOfConnectedDevices();
-            if((connectedDevicesList!=null)&&(connectedDevicesList.size()>0)){
-                for (BluetoothDevice bluetoothDevice : connectedDevicesList) {
-                    CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
-                    custBluetootDevices.setBleAddress(bluetoothDevice.getAddress());
-                    custBluetootDevices.setConnected(true);
-                    if (bluetoothDevice.getName() != null) {
-                        custBluetootDevices.setDeviceName(bluetoothDevice.getName());
-                    } else {
-                        custBluetootDevices.setDeviceName("NA");
+        if(ble_on_off()){
+            if(myMainActivity.mBluetoothLeService!=null){
+                List<BluetoothDevice> connectedDevicesList = myMainActivity.mBluetoothLeService.getListOfConnectedDevices();
+                if((connectedDevicesList!=null)&&(connectedDevicesList.size()>0)){
+                    for (BluetoothDevice bluetoothDevice : connectedDevicesList) {
+                        CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
+                        custBluetootDevices.setBleAddress(bluetoothDevice.getAddress());
+                        custBluetootDevices.setConnected(true);
+                        if (bluetoothDevice.getName() != null) {
+                            custBluetootDevices.setDeviceName(bluetoothDevice.getName());
+                        } else {
+                            custBluetootDevices.setDeviceName("NA");
+                        }
+                        custBluetootDevicesArrayList.add(custBluetootDevices);
+                        my_fragmentScanAdapter.notifyDataSetChanged();
                     }
-                    custBluetootDevicesArrayList.add(custBluetootDevices);
-                    my_fragmentScanAdapter.notifyDataSetChanged();
                 }
             }
+        }else {
+            custBluetootDevicesArrayList.clear();
+            my_fragmentScanAdapter.notifyDataSetChanged();
         }
-
     }
     private void clearScannedDevices(){
         custBluetootDevicesArrayList.clear();

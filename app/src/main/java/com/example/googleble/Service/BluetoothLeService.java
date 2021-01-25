@@ -111,6 +111,7 @@ public class BluetoothLeService extends Service {
                  */
                 if(connectionTimeOutTimer!=null){
                     connectionTimeOutTimer.cancel();
+                    connectionTimeOutTimer=null;
                 }
             }
 
@@ -322,7 +323,6 @@ public class BluetoothLeService extends Service {
             return false;
         }
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
-        System.out.println("ADDRESS_COMPA "+mBluetoothGatt.toString());
         connectionTimeOutTimer=new ConnectionTimeOutTimer(10000,1000);
         connectionTimeOutTimer.start();
         mBluetoothDeviceAddress = address;
@@ -411,19 +411,26 @@ public class BluetoothLeService extends Service {
 
         @Override
         public void onTick(long millisUntilFinished) {
-
+            System.out.println("Timer Running.");
         }
 
         @Override
         public void onFinish() {
+            System.out.println("Timer finished.");
                 if(mBluetoothGatt!=null){
                     mBluetoothGatt.disconnect();
                     mBluetoothGatt.close();
                     mBluetoothGatt=null;
                 }
+            sendTimerUpdateToMainActivity(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION),getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_FINISH_KEY),true);
         }
+
     }
-
-
+    private void sendTimerUpdateToMainActivity(final String action,final String key,final boolean value) {
+        Intent intent=new Intent(action);
+        intent.putExtra(key,value);
+        sendBroadcast(intent);
+        System.out.println("Timer finished. send broadcast");
+    }
 }
 

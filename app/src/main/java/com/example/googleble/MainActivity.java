@@ -26,12 +26,14 @@ import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.Fragment.FragmentData;
 import com.example.googleble.Fragment.FragmentScan;
 import com.example.googleble.Service.BluetoothLeService;
+import com.example.googleble.interfaceActivityFragment.DeviceConnectionTimeOut;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
 
 import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.convertByteArrayToHexString;
+import static com.example.googleble.Utility.UtilityHelper.ble_on_off;
 
 public class MainActivity extends AppCompatActivity
         implements
@@ -59,6 +61,7 @@ public class MainActivity extends AppCompatActivity
      */
     PassScanDeviceToActivity_interface passScanDeviceToActivity_interface;
     PassConnectionStatusToFragment passConnectionStatusToFragment;
+    DeviceConnectionTimeOut deviceConnectionTimeOut;
     public static String SCAN_TAG = "";
 
     @Override
@@ -143,7 +146,7 @@ public class MainActivity extends AppCompatActivity
                 String bleAddress = intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_BLE_ADDRESS)));
                 boolean connectionStatus = intent.getBooleanExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_CONNECTED_DISCONNECTED), false);
                 passConnectionSucesstoFragmentScanForUIChange(bleAddress, connectionStatus);
-                Log.d(TAG,"CONNECTION STATUS= BLE Address= "+bleAddress+" CONNECTION STATUS= "+connectionStatus);
+            //    Log.d(TAG,"CONNECTION STATUS= BLE Address= "+bleAddress+" CONNECTION STATUS= "+connectionStatus);
             } else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION)))) {
                 /**
                  * Data Written to the firmware getting loop back after write confermation.
@@ -151,16 +154,32 @@ public class MainActivity extends AppCompatActivity
                 String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_ADDRESS));
                 byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN));
                 int dataWrittenType = intent.getIntExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN_TYPE), -1);
-                Log.d(TAG,"Data Written ACK=  bleAddress= "+bleAddress+" DATA WRITTEN TYPE= "+dataWrittenType+" BYTE ARRAY IN HEX = "+ convertByteArrayToHexString(dataWritten)+" Data in String= "+new String(dataWritten));
+       //         Log.d(TAG,"Data Written ACK=  bleAddress= "+bleAddress+" DATA WRITTEN TYPE= "+dataWrittenType+" BYTE ARRAY IN HEX = "+ convertByteArrayToHexString(dataWritten)+" Data in String= "+new String(dataWritten));
             }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED)))) {
                 /**
                  * Data Obtained from the firmware.
                  */
                 String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_BLE_ADDRESS));
                 byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_DATA_RECIEVED));
-                Log.d(TAG,"DATT OBTAINED FROM FIRMWARE BLE ADDRESS=  "+bleAddress+" "+" DATA OBTAINED FROM FIRMWARE= "+convertByteArrayToHexString(dataWritten)+" "+" Data in String= "+new String(dataWritten));
+         //       Log.d(TAG,"DATT OBTAINED FROM FIRMWARE BLE ADDRESS=  "+bleAddress+" "+" DATA OBTAINED FROM FIRMWARE= "+convertByteArrayToHexString(dataWritten)+" "+" Data in String= "+new String(dataWritten));
+            }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION)))) {
+                /**
+                 * Logic to cacen the progress dialog and hide it.
+                 * 1)show something went wrong try again later after some time...
+                 * 2)Clear scan device and Scan again.
+                 */
+                System.out.println("Timer finished. send broadcast mainactivriy");
+                boolean timerCancelled=intent.getBooleanExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_FINISH_KEY),false);
+                passTimerOutConnectionTag(timerCancelled);
             }
         }
+
+        private void passTimerOutConnectionTag(boolean result) {
+            if(deviceConnectionTimeOut!=null){
+                deviceConnectionTimeOut.connectionTimeOutTimer(result);
+            }
+        }
+
         private void passConnectionSucesstoFragmentScanForUIChange(String connectedDeviceAddress, boolean connect_disconnect) {
             if (passConnectionStatusToFragment != null) {
                 passConnectionStatusToFragment.connectDisconnect(connectedDeviceAddress, connect_disconnect);
@@ -176,6 +195,7 @@ public class MainActivity extends AppCompatActivity
         intentFilter.addAction(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS));
         intentFilter.addAction(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION));
         intentFilter.addAction(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED));
+        intentFilter.addAction(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION));
         return intentFilter;
     }
 
@@ -207,8 +227,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void start_stop_scan() {
-        if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STOPED)) || (SCAN_TAG.equalsIgnoreCase(""))) {
-            startScan();
+        if(ble_on_off()){
+            if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STOPED)) || (SCAN_TAG.equalsIgnoreCase(""))) {
+                startScan();
+            }
         }
     }
 
@@ -273,6 +295,10 @@ public class MainActivity extends AppCompatActivity
         this.passConnectionStatusToFragment = locpassConnectionStatusToFragment;
     }
 
+    public void setUpDeviceConnectionTimeOut(DeviceConnectionTimeOut deviceConnectionTimeOut_loc){
+        this.deviceConnectionTimeOut=deviceConnectionTimeOut_loc;
+    }
+
     private void interfaceIntialization() {
         setupPassScanDeviceToActivity_interface(new PassScanDeviceToActivity_interface() {
             @Override
@@ -284,6 +310,13 @@ public class MainActivity extends AppCompatActivity
         setupPassConnectionStatusToFragment(new PassConnectionStatusToFragment() {
             @Override
             public void connectDisconnect(String bleAddress, boolean connected_disconnected) {
+
+            }
+        });
+
+        setUpDeviceConnectionTimeOut(new DeviceConnectionTimeOut() {
+            @Override
+            public void connectionTimeOutTimer(boolean result) {
 
             }
         });
