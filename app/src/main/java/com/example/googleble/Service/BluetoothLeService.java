@@ -308,14 +308,6 @@ public class BluetoothLeService extends Service {
         if (device == null) {
             return false;
         }
-        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress) && mBluetoothGatt != null) {
-            if (mBluetoothGatt.connect()) {
-                mConnectionState = STATE_CONNECTING;
-                return true;
-            } else {
-                return false;
-            }
-        }
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
         Log.d(TAG," connect=  "+mBluetoothGatt.toString());
         mBluetoothDeviceAddress = address;
