@@ -35,7 +35,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.bytesToHex;
+import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.convertHexToBigIntegert;
 import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.convert_LongTo_4_bytes;
+import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.longToBytes;
 import static com.example.googleble.Utility.UtilityHelper.ble_on_off;
 import static com.example.googleble.Utility.UtilityHelper.showPermissionDialog;
 
@@ -107,8 +109,8 @@ public class FragmentScan extends BaseFragment {
             @Override
             public void sendDataButtonClickedForItem(CustBluetootDevices custBluetootDevices, int positionClicked) {
                                 if(sendDataToBleDevice!=null){
-                                    long timeStamp=System.currentTimeMillis()/1000;
-                                    sendDataToBleDevice.parseDataToBleDevice(custBluetootDevices,convert_LongTo_4_bytes(timeStamp));
+                                    long timeStamp=System.currentTimeMillis();
+                                    sendDataToBleDevice.parseDataToBleDevice(custBluetootDevices,longToBytes(timeStamp));
                                 }
             }
 
@@ -279,9 +281,8 @@ public class FragmentScan extends BaseFragment {
                 if (custBluetootDevicesArrayList.contains(custBluetootDevices)) {
                     int postion = custBluetootDevicesArrayList.indexOf(custBluetootDevices);
                     CustBluetootDevices custBluetootDevices1 = custBluetootDevicesArrayList.get(postion);
-                    custBluetootDevices1.setDataObtained(""+bytesToHex(dataRecievedFromFirmware));
+                    custBluetootDevices1.setDataObtained(""+convertHexToBigIntegert(bytesToHex(dataRecievedFromFirmware)));
                     my_fragmentScanAdapter.notifyItemChanged(postion);
-                    System.out.println("Convert Data Recieved From Firmware= "+bytesToHex(dataRecievedFromFirmware));
                 }
             }
         });

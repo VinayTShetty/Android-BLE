@@ -1,17 +1,10 @@
 package com.example.googleble.ByteConversionPackage;
 
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+
 public class ByteConversionHelper {
     private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
-    public static String convertByteArrayToHexString(byte[] inputValue){
-        String hexValue="";
-        for (byte b : inputValue) {
-            String st = String.format("%02X", b);
-            System.out.print(st);
-            hexValue=st;
-        }
-        return hexValue;
-    }
-
     public static byte[] convert_LongTo_4_bytes(long value){
         byte [] data = new byte[4];
         data[3] = (byte) value;
@@ -29,6 +22,17 @@ public class ByteConversionHelper {
             hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
         }
         return new String(hexChars);
+    }
+
+    public static BigInteger convertHexToBigIntegert(String  hexValuevalue){
+        BigInteger bi = new BigInteger(hexValuevalue, 16);
+        return bi;
+    }
+
+    public static byte[] longToBytes(long x) {
+        ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
+        buffer.putLong(x);
+        return buffer.array();
     }
 
 }
