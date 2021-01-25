@@ -24,6 +24,7 @@ import com.example.googleble.R;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PrimitiveIterator;
 import java.util.UUID;
 import static com.example.googleble.UUID.FirmwareUUID.CLIENT_CHARACTERISTIC_CONFIG;
 import static com.example.googleble.UUID.FirmwareUUID.GEO_FENCE_CHARCTERSTICS_UUID;
@@ -148,11 +149,16 @@ public class BluetoothLeService extends Service {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
-            Log.d(TAG,"onCharacteristicWrite Write Type "+characteristic.getWriteType());
+            /**
+             * Confermed data recieved in the firmware.
+             */
+           /* Log.d(TAG,"onCharacteristicWrite Write Type "+characteristic.getWriteType());
             Log.d(TAG,"onCharacteristicWrite Write Type "+characteristic.getValue());
             Log.d(TAG,"onCharacteristicWrite Write Type "+status);
             Log.d(TAG,"onCharacteristicWrite Write Type "+new String(characteristic.getValue()));
-            System.out.println("MULTIPLE_BLE_CONNECTION  onConnectionStateChange = BLE_ADDRESS= "+gatt.getDevice().getAddress()+" Gatt hashCode= "+gatt.toString());
+            System.out.println("MULTIPLE_BLE_CONNECTION  onConnectionStateChange = BLE_ADDRESS= "+gatt.getDevice().getAddress()+" Gatt hashCode= "+gatt.toString());*/
+
+            send_Confermation_WhatDataWriteen_InFirmware(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION),gatt.getDevice().getAddress(),characteristic.getWriteType(),characteristic.getValue());
         }
 
         @Override
@@ -209,13 +215,17 @@ public class BluetoothLeService extends Service {
        sendBroadcast(intent);
     }
 
-    private void sendDataRecievedFromFirmware(final String action,final String bleaddress,final  byte byteArrayData[]){
-        final Intent intent = new Intent(action);
-        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS), bleAddress);
-        intent.putExtra(getResources().getString(R.string.CONNECTION_STATUS_BLE_DEVICE),connectionStatus);
+    private void send_Confermation_WhatDataWriteen_InFirmware(final String action,final String bleaddress,int dataWriteenType,final  byte byteArrayData[]){
+        Intent intent=new Intent(action);
+        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_ADDRESS),bleaddress);
+        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN),byteArrayData);
+        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN_TYPE),dataWriteenType);
         sendBroadcast(intent);
     }
 
+    private void sendDataRecievedFromFirmware(final String action,final String bleAddress,final byte dataRecieved){
+
+    }
     private void broadcastUpdate(final String action, final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
         final byte[] data = characteristic.getValue();
