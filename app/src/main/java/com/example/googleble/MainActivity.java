@@ -168,7 +168,6 @@ public class MainActivity extends AppCompatActivity
                  * 1)show something went wrong try again later after some time...
                  * 2)Clear scan device and Scan again.
                  */
-                System.out.println("Timer finished. send broadcast mainactivriy");
                 boolean timerCancelled=intent.getBooleanExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_FINISH_KEY),false);
                 passTimerOutConnectionTag(timerCancelled);
             }

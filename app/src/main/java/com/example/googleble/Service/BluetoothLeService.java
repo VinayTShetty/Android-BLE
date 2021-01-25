@@ -397,7 +397,6 @@ public class BluetoothLeService extends Service {
 
 
     public class ConnectionTimeOutTimer extends CountDownTimer{
-
         /**
          * @param millisInFuture    The number of millis in the future from the call
          *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
@@ -411,12 +410,10 @@ public class BluetoothLeService extends Service {
 
         @Override
         public void onTick(long millisUntilFinished) {
-            System.out.println("Timer Running.");
         }
 
         @Override
         public void onFinish() {
-            System.out.println("Timer finished.");
                 if(mBluetoothGatt!=null){
                     mBluetoothGatt.disconnect();
                     mBluetoothGatt.close();
@@ -430,7 +427,6 @@ public class BluetoothLeService extends Service {
         Intent intent=new Intent(action);
         intent.putExtra(key,value);
         sendBroadcast(intent);
-        System.out.println("Timer finished. send broadcast");
     }
 }
 
