@@ -31,6 +31,8 @@ import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
 
+import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.convertByteArrayToHexString;
+
 public class MainActivity extends AppCompatActivity
         implements
         DeviceConnectDisconnect,
@@ -149,17 +151,16 @@ public class MainActivity extends AppCompatActivity
                 String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_ADDRESS));
                 byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN));
                 int dataWrittenType = intent.getIntExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN_TYPE), -1);
-                Log.d(TAG,"Data Written ACK=  bleAddress= "+bleAddress+" DATA WRITTEN TYPE= "+dataWrittenType+" BYTE ARRAY IN HEX = "+String.format("%02x", dataWritten)+"");
+                Log.d(TAG,"Data Written ACK=  bleAddress= "+bleAddress+" DATA WRITTEN TYPE= "+dataWrittenType+" BYTE ARRAY IN HEX = "+ convertByteArrayToHexString(dataWritten));
             }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED)))) {
                 /**
                  * Data Obtained from the firmware.
                  */
                 String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_BLE_ADDRESS));
                 byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_DATA_RECIEVED));
-                Log.d(TAG,"DATT OBTAINED FROM FIRMWARE BLE ADDRESS=  "+bleAddress+" "+" DATA OBTAINED FROM FIRMWARE= "+String.format("%02x", dataWritten));
+                Log.d(TAG,"DATT OBTAINED FROM FIRMWARE BLE ADDRESS=  "+bleAddress+" "+" DATA OBTAINED FROM FIRMWARE= "+convertByteArrayToHexString(dataWritten));
             }
         }
-
         private void passConnectionSucesstoFragmentScanForUIChange(String connectedDeviceAddress, boolean connect_disconnect) {
             if (passConnectionStatusToFragment != null) {
                 passConnectionStatusToFragment.connectDisconnect(connectedDeviceAddress, connect_disconnect);
