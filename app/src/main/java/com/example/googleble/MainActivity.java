@@ -29,6 +29,7 @@ import com.example.googleble.Service.BluetoothLeService;
 import com.example.googleble.interfaceActivityFragment.DeviceConnectionTimeOut;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
+import com.example.googleble.interfaceActivityFragment.ShowDataForItemInRecycleView;
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
 
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity
     PassScanDeviceToActivity_interface passScanDeviceToActivity_interface;
     PassConnectionStatusToFragment passConnectionStatusToFragment;
     DeviceConnectionTimeOut deviceConnectionTimeOut;
+    ShowDataForItemInRecycleView showDataForItemInRecycleView;
     public static String SCAN_TAG = "";
 
     @Override
@@ -160,7 +162,10 @@ public class MainActivity extends AppCompatActivity
                  * Data Obtained from the firmware.
                  */
                 String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_BLE_ADDRESS));
-                byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_DATA_RECIEVED));
+                byte[] obtainedFromFirmware = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_DATA_RECIEVED));
+                if(showDataForItemInRecycleView!=null){
+                    showDataForItemInRecycleView.recievedDataFromFirmware(bleAddress,obtainedFromFirmware);
+                }
          //       Log.d(TAG,"DATT OBTAINED FROM FIRMWARE BLE ADDRESS=  "+bleAddress+" "+" DATA OBTAINED FROM FIRMWARE= "+convertByteArrayToHexString(dataWritten)+" "+" Data in String= "+new String(dataWritten));
             }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION)))) {
                 /**
@@ -298,6 +303,10 @@ public class MainActivity extends AppCompatActivity
         this.deviceConnectionTimeOut=deviceConnectionTimeOut_loc;
     }
 
+    public void setUpShowDataForItemInRecycleView(ShowDataForItemInRecycleView loc_showDataForItemInRecycleView){
+        this.showDataForItemInRecycleView=loc_showDataForItemInRecycleView;
+    }
+
     private void interfaceIntialization() {
         setupPassScanDeviceToActivity_interface(new PassScanDeviceToActivity_interface() {
             @Override
@@ -316,6 +325,13 @@ public class MainActivity extends AppCompatActivity
         setUpDeviceConnectionTimeOut(new DeviceConnectionTimeOut() {
             @Override
             public void connectionTimeOutTimer(boolean result) {
+
+            }
+        });
+
+        setUpShowDataForItemInRecycleView(new ShowDataForItemInRecycleView() {
+            @Override
+            public void recievedDataFromFirmware(String bleAddress,byte[] dataRecievedFromFirmware) {
 
             }
         });

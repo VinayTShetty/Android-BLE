@@ -27,6 +27,7 @@ import com.example.googleble.R;
 import com.example.googleble.interfaceActivityFragment.DeviceConnectionTimeOut;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
+import com.example.googleble.interfaceActivityFragment.ShowDataForItemInRecycleView;
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -262,6 +263,21 @@ public class FragmentScan extends BaseFragment {
                     custBluetootDevicesArrayList.clear();
                     getListOfConnectedDevices();
                     myMainActivity.start_stop_scan();
+                }
+            }
+        });
+
+
+        myMainActivity.setUpShowDataForItemInRecycleView(new ShowDataForItemInRecycleView() {
+            @Override
+            public void recievedDataFromFirmware(String bleAddress, byte[] dataRecievedFromFirmware) {
+                CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
+                custBluetootDevices.setBleAddress(bleAddress);
+                if (custBluetootDevicesArrayList.contains(custBluetootDevices)) {
+                    int postion = custBluetootDevicesArrayList.indexOf(custBluetootDevices);
+                    CustBluetootDevices custBluetootDevices1 = custBluetootDevicesArrayList.get(postion);
+                    custBluetootDevices1.setDataObtained(""+new String(dataRecievedFromFirmware));
+                    my_fragmentScanAdapter.notifyItemChanged(postion);
                 }
             }
         });
