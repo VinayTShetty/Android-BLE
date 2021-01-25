@@ -314,7 +314,8 @@ public class BluetoothLeService extends Service {
         if (mBluetoothAdapter == null || address == null) {
             return false;
         }
-     /*   if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)&& mBluetoothGatt != null) {
+       /* if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)&& mBluetoothGatt != null) {
+            System.out.println("vvvvvvvvvvvvvvvvvvvvvvvvv = "+mBluetoothGatt.toString());
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTING;
                 return true;
