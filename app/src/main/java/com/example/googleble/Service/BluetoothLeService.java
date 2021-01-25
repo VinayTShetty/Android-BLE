@@ -152,21 +152,13 @@ public class BluetoothLeService extends Service {
             /**
              * Confermed data recieved in the firmware.
              */
-           /* Log.d(TAG,"onCharacteristicWrite Write Type "+characteristic.getWriteType());
-            Log.d(TAG,"onCharacteristicWrite Write Type "+characteristic.getValue());
-            Log.d(TAG,"onCharacteristicWrite Write Type "+status);
-            Log.d(TAG,"onCharacteristicWrite Write Type "+new String(characteristic.getValue()));
-            System.out.println("MULTIPLE_BLE_CONNECTION  onConnectionStateChange = BLE_ADDRESS= "+gatt.getDevice().getAddress()+" Gatt hashCode= "+gatt.toString());*/
-
             send_Confermation_WhatDataWriteen_InFirmware(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION),gatt.getDevice().getAddress(),characteristic.getWriteType(),characteristic.getValue());
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-            Log.d(TAG,"onCharacteristicChanged  "+characteristic.getStringValue(2));
-            Log.d(TAG,"onCharacteristicChanged  "+new String(characteristic.getValue()));
-            System.out.println("onCharacteristicChanged executed");
+            sendDataRecievedFromFirmware(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED),gatt.getDevice().getAddress(),characteristic.getValue());
+
         }
 
         @Override

@@ -132,15 +132,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-            if (BluetoothLeService.ACTION_GATT_CONNECTED.equals(action)) {
-                mConnected = true;
-                invalidateOptionsMenu();
-            } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
-                mConnected = false;
-            } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-            } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
-                String data=intent.getStringExtra(BluetoothLeService.EXTRA_DATA);
-            }else if((action!=null)&&(action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)))||(action.equalsIgnoreCase(getResources().getString(R.string.CONNECTION_STATUS_BLE_DEVICE)))){
+          if((action!=null)&&(action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)))||(action.equalsIgnoreCase(getResources().getString(R.string.CONNECTION_STATUS_BLE_DEVICE)))){
                 String bleAddress=intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_BLE_ADDRESS)));
                 boolean connectionStatus=intent.getBooleanExtra(getResources().getString(R.string.CONNECTION_STATUS_BLE_DEVICE),false);
                 passConnectionSucesstoFragmentScanForUIChange(bleAddress,connectionStatus);
