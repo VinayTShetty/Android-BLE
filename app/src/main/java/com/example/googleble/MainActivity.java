@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.Fragment.FragmentData;
@@ -35,12 +36,12 @@ public class MainActivity extends AppCompatActivity
         DeviceConnectDisconnect,
         SendDataToBleDevice {
     /**
-     *BluetoothLeService class Variables.
+     * BluetoothLeService class Variables.
      */
     public BluetoothLeService mBluetoothLeService;
-
+    private final static String TAG = MainActivity.class.getSimpleName();
     /**
-     *Scan for the Ble Devices.
+     * Scan for the Ble Devices.
      */
     private BluetoothLeScanner bluetoothLeScanner =
             BluetoothAdapter.getDefaultAdapter().getBluetoothLeScanner();
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity
      */
     PassScanDeviceToActivity_interface passScanDeviceToActivity_interface;
     PassConnectionStatusToFragment passConnectionStatusToFragment;
-    public static  String SCAN_TAG="";
+    public static String SCAN_TAG = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity
         interfaceIntialization();
         bindBleServiceToMainActivity();
         intializeFragmentManager();
-        replaceFragmentTransaction(new FragmentScan(),null);
+        replaceFragmentTransaction(new FragmentScan(), null);
     }
 
     @Override
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity
     protected void onStop() {
         super.onStop();
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -101,15 +103,15 @@ public class MainActivity extends AppCompatActivity
     public void onBackPressed() {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (fragment.toString().equalsIgnoreCase(new FragmentScan().toString())) {
-        }else if(fragment.toString().equalsIgnoreCase(new FragmentData().toString())){
-            replaceFragmentTransaction(new FragmentScan(),null);
+        } else if (fragment.toString().equalsIgnoreCase(new FragmentData().toString())) {
+            replaceFragmentTransaction(new FragmentScan(), null);
         }
     }
 
     /**
      * Code to manage Service life Cycle.
      */
-    private final ServiceConnection serviceConnection=new ServiceConnection() {
+    private final ServiceConnection serviceConnection = new ServiceConnection() {
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -128,27 +130,40 @@ public class MainActivity extends AppCompatActivity
      * BroadCast Reciever tot Recieve Data from BLE Service class..
      */
     private boolean mConnected = false;
-    private final BroadcastReceiver bluetootServiceRecieverData=new BroadcastReceiver() {
+    private final BroadcastReceiver bluetootServiceRecieverData = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             final String action = intent.getAction();
-          if((action!=null)&&(action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS))) ){
-                String bleAddress=intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_BLE_ADDRESS)));
-                boolean connectionStatus=intent.getBooleanExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_CONNECTED_DISCONNECTED),false);
-                passConnectionSucesstoFragmentScanForUIChange(bleAddress,connectionStatus);
-              System.out.println("CONNECT_DISCONNECT MainActivity bluetootServiceRecieverData bleAddress= "+bleAddress+" Connection Status= "+connectionStatus);
+            if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS)))) {
+                /**
+                 * Connection/Disconnection of the Device.
+                 */
+                String bleAddress = intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_BLE_ADDRESS)));
+                boolean connectionStatus = intent.getBooleanExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_CONNECTED_DISCONNECTED), false);
+                passConnectionSucesstoFragmentScanForUIChange(bleAddress, connectionStatus);
+                System.out.println("CONNECT_DISCONNECT MainActivity bluetootServiceRecieverData bleAddress= " + bleAddress + " Connection Status= " + connectionStatus);
+            } else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION)))) {
+                /**
+                 * Data Written to the firmware getting loop back after write confermation.
+                 */
+                String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_ADDRESS));
+                byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN));
+                int dataWrittenType = intent.getIntExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN_TYPE), -1);
+                Log.d(TAG,"Data Written ACK=  bleAddress= "+bleAddress+" DATA WRITTEN TYPE= "+dataWrittenType+" BYTE ARRAY IN HEX = "+String.format("%02x", dataWritten)+"");
             }
         }
-        private void passConnectionSucesstoFragmentScanForUIChange(String connectedDeviceAddress,boolean connect_disconnect) {
-            if(passConnectionStatusToFragment!=null){
-                passConnectionStatusToFragment.connectDisconnect(connectedDeviceAddress,connect_disconnect);
+
+        private void passConnectionSucesstoFragmentScanForUIChange(String connectedDeviceAddress, boolean connect_disconnect) {
+            if (passConnectionStatusToFragment != null) {
+                passConnectionStatusToFragment.connectDisconnect(connectedDeviceAddress, connect_disconnect);
             }
         }
     };
+
     /**
      * BroadCast Reciever Data Trigger.
      */
-    private  IntentFilter makeGattUpdateIntentFilter() {
+    private IntentFilter makeGattUpdateIntentFilter() {
         final IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS));
         intentFilter.addAction(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION));
@@ -156,7 +171,7 @@ public class MainActivity extends AppCompatActivity
         return intentFilter;
     }
 
-    private void bindBleServiceToMainActivity(){
+    private void bindBleServiceToMainActivity() {
         Intent intent = new Intent(this, BluetoothLeService.class);
         bindService(intent, serviceConnection, BIND_AUTO_CREATE);
     }
@@ -183,14 +198,14 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void start_stop_scan(){
-        if(SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STOPED))||(SCAN_TAG.equalsIgnoreCase(""))){
+    public void start_stop_scan() {
+        if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STOPED)) || (SCAN_TAG.equalsIgnoreCase(""))) {
             startScan();
         }
     }
 
-    private void startScan(){
-        SCAN_TAG=getResources().getString(R.string.SCAN_STARTED);
+    private void startScan() {
+        SCAN_TAG = getResources().getString(R.string.SCAN_STARTED);
         bluetoothLeScanner.startScan(leScanCallback);
         handler.postDelayed(new Runnable() {
             @Override
@@ -200,8 +215,9 @@ public class MainActivity extends AppCompatActivity
             }
         }, SCAN_PERIOD);
     }
-    private void stopScan(){
-        SCAN_TAG=getResources().getString(R.string.SCAN_STOPED);
+
+    private void stopScan() {
+        SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
         bluetoothLeScanner.stopScan(leScanCallback);
     }
 
@@ -210,16 +226,16 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
                     super.onScanResult(callbackType, result);
-                  if(passScanDeviceToActivity_interface!=null){
-                      if(result!=null){
-                          if((result.getDevice().getName()!=null)&&(result.getDevice().getName().length()>0)){
-                              passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(),result.getDevice().getName(),result.getDevice(),false));
-                          }else {
-                              passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(),"NA",result.getDevice(),false));
+                    if (passScanDeviceToActivity_interface != null) {
+                        if (result != null) {
+                            if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)) {
+                                passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), result.getDevice().getName(), result.getDevice(), false));
+                            } else {
+                                passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
 
-                          }
-                      }
-                  }
+                            }
+                        }
+                    }
                 }
             };
 
@@ -227,30 +243,29 @@ public class MainActivity extends AppCompatActivity
      * Fragment Transaction
      */
 
-    public void replaceFragmentTransaction(Fragment fragment,Bundle bundleData){
-        fragmentTransaction= fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container,fragment);
+    public void replaceFragmentTransaction(Fragment fragment, Bundle bundleData) {
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, fragment);
         fragmentTransaction.commit();
     }
 
-    private void intializeFragmentManager(){
-        fragmentManager=getSupportFragmentManager();
+    private void intializeFragmentManager() {
+        fragmentManager = getSupportFragmentManager();
     }
 
     /**
      * Interface intialization (From Activity to Fragment)
      */
-    public void  setupPassScanDeviceToActivity_interface(PassScanDeviceToActivity_interface loc_passScanDeviceToActivity_interface){
-        this.passScanDeviceToActivity_interface=loc_passScanDeviceToActivity_interface;
+    public void setupPassScanDeviceToActivity_interface(PassScanDeviceToActivity_interface loc_passScanDeviceToActivity_interface) {
+        this.passScanDeviceToActivity_interface = loc_passScanDeviceToActivity_interface;
     }
 
 
-
-    public void setupPassConnectionStatusToFragment(PassConnectionStatusToFragment locpassConnectionStatusToFragment){
-        this.passConnectionStatusToFragment=locpassConnectionStatusToFragment;
+    public void setupPassConnectionStatusToFragment(PassConnectionStatusToFragment locpassConnectionStatusToFragment) {
+        this.passConnectionStatusToFragment = locpassConnectionStatusToFragment;
     }
 
-    private void interfaceIntialization(){
+    private void interfaceIntialization() {
         setupPassScanDeviceToActivity_interface(new PassScanDeviceToActivity_interface() {
             @Override
             public void sendCustomBleDevice(CustBluetootDevices custBluetootDevices) {
@@ -265,21 +280,22 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
     @Override
     public void makeDevieConnecteDisconnect(CustBluetootDevices custBluetootDevices, boolean connect_disconnect) {
-        if(connect_disconnect){
-           boolean connectissue= mBluetoothLeService.connect(custBluetootDevices.getBleAddress());
-            System.out.println("CONNECT_DISCONNECT MainACtivity status +"+connectissue);
-            System.out.println("CONNECT_DISCONNECT MainActivity makeDevieConnecteDisconnect bleAddress= "+custBluetootDevices.getBleAddress()+" Connection Status= "+true);
-        }else {
+        if (connect_disconnect) {
+            boolean connectissue = mBluetoothLeService.connect(custBluetootDevices.getBleAddress());
+            System.out.println("CONNECT_DISCONNECT MainACtivity status +" + connectissue);
+            System.out.println("CONNECT_DISCONNECT MainActivity makeDevieConnecteDisconnect bleAddress= " + custBluetootDevices.getBleAddress() + " Connection Status= " + true);
+        } else {
             mBluetoothLeService.disconnect(custBluetootDevices.getBleAddress());
-            System.out.println("CONNECT_DISCONNECT MainActivity makeDevieConnecteDisconnect bleAddress= "+custBluetootDevices.getBleAddress()+" Connection Status= "+false);
+            System.out.println("CONNECT_DISCONNECT MainActivity makeDevieConnecteDisconnect bleAddress= " + custBluetootDevices.getBleAddress() + " Connection Status= " + false);
 
         }
     }
 
     @Override
     public void parseDataToBleDevice(CustBluetootDevices custBluetootDevices, byte[] dataToSend) {
-        mBluetoothLeService.sendDataToBleDevice(custBluetootDevices.getBleAddress(),dataToSend);
+        mBluetoothLeService.sendDataToBleDevice(custBluetootDevices.getBleAddress(), dataToSend);
     }
 }
