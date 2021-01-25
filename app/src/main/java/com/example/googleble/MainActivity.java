@@ -267,11 +267,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void makeDevieConnecteDisconnect(CustBluetootDevices custBluetootDevices, boolean connect_disconnect) {
         if(connect_disconnect){
-            System.out.println("Device_Going for Connection");
             mBluetoothLeService.connect(custBluetootDevices.getBleAddress());
         }else {
-            mBluetoothLeService.disconnect();
-            System.out.println("Device_Going for DisConnection");
+            mBluetoothLeService.disconnect(custBluetootDevices.getBleAddress());
         }
     }
 

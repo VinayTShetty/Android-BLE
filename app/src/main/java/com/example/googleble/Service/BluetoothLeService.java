@@ -103,6 +103,7 @@ public class BluetoothLeService extends Service {
             String bleAddress=bleDevice.getAddress();
             String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
+                System.out.println("DISCONNECT_CONNECTE_BUG CONNECTED");
                 if(!mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     mutlipleBluetooDeviceGhatt.put(bleAddress,gatt);
                     mutlipleBluetooDeviceGhatt.get(bleAddress).discoverServices();
@@ -112,6 +113,7 @@ public class BluetoothLeService extends Service {
                 sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),gatt.getDevice().getAddress(),true);
                 broadcastUpdate(intentAction);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                System.out.println("DISCONNECT_CONNECTE_BUG DiSCONNECTED");
                 sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),gatt.getDevice().getAddress(),false);
                 if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddress);
@@ -297,11 +299,18 @@ public class BluetoothLeService extends Service {
         mBluetoothGatt = null;
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public void disconnect() {
+    public void disconnect(String bleAddress) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             return;
         }
-        mBluetoothGatt.disconnect();
+        if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
+            BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddress);
+            if( bluetoothGatt != null ){
+                bluetoothGatt.close();
+                bluetoothGatt = null;
+            }
+            mutlipleBluetooDeviceGhatt.remove(bleAddress);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
