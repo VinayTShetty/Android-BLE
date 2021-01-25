@@ -223,8 +223,11 @@ public class BluetoothLeService extends Service {
         sendBroadcast(intent);
     }
 
-    private void sendDataRecievedFromFirmware(final String action,final String bleAddress,final byte dataRecieved){
-
+    private void sendDataRecievedFromFirmware(final String action,final String bleAddress,final byte[] dataRecieved){
+        Intent intent=new Intent(action);
+        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_BLE_ADDRESS),bleAddress);
+        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED_DATA_RECIEVED),dataRecieved);
+        sendBroadcast(intent);
     }
     private void broadcastUpdate(final String action, final BluetoothGattCharacteristic characteristic) {
         final Intent intent = new Intent(action);
