@@ -105,6 +105,15 @@ public class BluetoothLeService extends Service {
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
+            if(mBluetoothGatt.equals(gatt)){
+                /**
+                 * Logic to remove ConnectionTime Out timer...
+                 */
+                if(connectionTimeOutTimer!=null){
+                    connectionTimeOutTimer.cancel();
+                }
+            }
+
             BluetoothDevice bleDevice=gatt.getDevice();
             String bleAddress=bleDevice.getAddress();
             if (newState == BluetoothProfile.STATE_CONNECTED) {
@@ -313,6 +322,7 @@ public class BluetoothLeService extends Service {
             return false;
         }
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
+        System.out.println("ADDRESS_COMPA "+mBluetoothGatt.toString());
         connectionTimeOutTimer=new ConnectionTimeOutTimer(10000,1000);
         connectionTimeOutTimer.start();
         mBluetoothDeviceAddress = address;
@@ -406,7 +416,11 @@ public class BluetoothLeService extends Service {
 
         @Override
         public void onFinish() {
-
+                if(mBluetoothGatt!=null){
+                    mBluetoothGatt.disconnect();
+                    mBluetoothGatt.close();
+                    mBluetoothGatt=null;
+                }
         }
     }
 
