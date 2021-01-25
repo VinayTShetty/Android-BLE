@@ -143,7 +143,7 @@ public class MainActivity extends AppCompatActivity
                 String bleAddress = intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_BLE_ADDRESS)));
                 boolean connectionStatus = intent.getBooleanExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_CONNECTED_DISCONNECTED), false);
                 passConnectionSucesstoFragmentScanForUIChange(bleAddress, connectionStatus);
-                System.out.println("CONNECT_DISCONNECT MainActivity bluetootServiceRecieverData bleAddress= " + bleAddress + " Connection Status= " + connectionStatus);
+                Log.d(TAG,"CONNECTION STATUS= BLE Address= "+bleAddress+" CONNECTION STATUS= "+connectionStatus);
             } else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION)))) {
                 /**
                  * Data Written to the firmware getting loop back after write confermation.
