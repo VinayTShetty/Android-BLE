@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity
                             if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)) {
                                 passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), result.getDevice().getName(), result.getDevice(), false));
                             } else {
-                                passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
+                               // passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
 
                             }
                         }
