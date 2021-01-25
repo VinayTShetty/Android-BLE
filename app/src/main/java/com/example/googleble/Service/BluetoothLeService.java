@@ -306,10 +306,12 @@ public class BluetoothLeService extends Service {
         if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
             BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddress);
             if( bluetoothGatt != null ){
+                bluetoothGatt.disconnect();
                 bluetoothGatt.close();
                 bluetoothGatt = null;
+                mutlipleBluetooDeviceGhatt.remove(bleAddress);
             }
-            mutlipleBluetooDeviceGhatt.remove(bleAddress);
+
         }
     }
 
@@ -325,6 +327,7 @@ public class BluetoothLeService extends Service {
             } else {
                 return false;
             }
+
         }
 
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
