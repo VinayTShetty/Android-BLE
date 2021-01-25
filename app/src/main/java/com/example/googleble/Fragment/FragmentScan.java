@@ -12,14 +12,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.googleble.Adapter.FragmentScanAdapter;
 import com.example.googleble.BaseFragment.BaseFragment;
 import com.example.googleble.CustomObjects.CustBluetootDevices;
@@ -31,10 +29,8 @@ import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
 import com.kaopiz.kprogresshud.KProgressHUD;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static com.example.googleble.Utility.UtilityHelper.ble_on_off;
 import static com.example.googleble.Utility.UtilityHelper.showPermissionDialog;
 
