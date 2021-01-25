@@ -101,20 +101,17 @@ public class BluetoothLeService extends Service {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             BluetoothDevice bleDevice=gatt.getDevice();
             String bleAddress=bleDevice.getAddress();
-            String intentAction;
             if (newState == BluetoothProfile.STATE_CONNECTED) {
                 System.out.println("DISCONNECT_CONNECTE_BUG CONNECTED");
                 if(!mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     mutlipleBluetooDeviceGhatt.put(bleAddress,gatt);
                     mutlipleBluetooDeviceGhatt.get(bleAddress).discoverServices();
                 }
-                intentAction = ACTION_GATT_CONNECTED;
-                mConnectionState = STATE_CONNECTED;
+
                 sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),gatt.getDevice().getAddress(),true);
-                broadcastUpdate(intentAction);
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 System.out.println("DISCONNECT_CONNECTE_BUG DiSCONNECTED");
-                sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),gatt.getDevice().getAddress(),false);
+
                 if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddress);
                     if( bluetoothGatt != null ){
@@ -122,11 +119,8 @@ public class BluetoothLeService extends Service {
                         bluetoothGatt = null;
                     }
                     mutlipleBluetooDeviceGhatt.remove(bleAddress);
+                    sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),gatt.getDevice().getAddress(),false);
                 }
-                intentAction = ACTION_GATT_DISCONNECTED;
-                mConnectionState = STATE_DISCONNECTED;
-
-                broadcastUpdate(intentAction);
             }else {
                 System.out.println("BLE_SERVICE STATUS= "+status);
                 System.out.println("BLE_SERVICE NEW STATE = "+newState);
@@ -311,7 +305,7 @@ public class BluetoothLeService extends Service {
                 bluetoothGatt = null;
                 mutlipleBluetooDeviceGhatt.remove(bleAddress);
             }
-
+            sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),bleAddress,false);
         }
     }
 
@@ -320,7 +314,7 @@ public class BluetoothLeService extends Service {
         if (mBluetoothAdapter == null || address == null) {
             return false;
         }
-        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)&& mBluetoothGatt != null) {
+     /*   if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress)&& mBluetoothGatt != null) {
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTING;
                 return true;
@@ -328,7 +322,7 @@ public class BluetoothLeService extends Service {
                 return false;
             }
 
-        }
+        }*/
 
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {

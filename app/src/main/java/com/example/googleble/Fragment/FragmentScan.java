@@ -86,10 +86,12 @@ public class FragmentScan extends BaseFragment {
             public void ClickedItem(CustBluetootDevices custBluetootDevices, int positionClicked) {
                 if (deviceConnectDisconnect != null) {
                     if (custBluetootDevices.isConnected()) {
+                        showProgressDialog(custBluetootDevices.getBleAddress(),"Disonnecting ");
                         deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, false);
+                        System.out.println("CONNECT_DISCONNECT disconnectionFragmentScan");
                     } else if (!custBluetootDevices.isConnected()) {
                         if(ble_on_off()){
-                            showProgressDialog(custBluetootDevices.getBleAddress());
+                            showProgressDialog(custBluetootDevices.getBleAddress(),"Connectiong ");
                             deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, true);
                         }else {
                             showDialogHelper.errorDialog("Turn on Bluetooth");
@@ -118,10 +120,10 @@ public class FragmentScan extends BaseFragment {
         sendDataToBleDevice=(SendDataToBleDevice)getActivity();
         progressDialog=KProgressHUD.create(getActivity());
     }
-    private void showProgressDialog(String bleAddress){
+    private void showProgressDialog(String bleAddress,String detailedLabel){
         progressDialog.setStyle(KProgressHUD.Style.SPIN_INDETERMINATE)
                         .setLabel("Please wait")
-                        .setDetailsLabel("Connecting To "+bleAddress)
+                        .setDetailsLabel(detailedLabel+" "+bleAddress)
                         .setCancellable(false)
                         .show();
     }
@@ -236,7 +238,6 @@ public class FragmentScan extends BaseFragment {
                         custBluetootDevices1.setConnected(true);
                         my_fragmentScanAdapter.notifyItemChanged(postion);
                         cancelProgressDialog();
-                     //   myMainActivity.replaceFragmentTransaction(new FragmentData(),null);
                     }
                 } else {
                     CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
@@ -246,6 +247,7 @@ public class FragmentScan extends BaseFragment {
                         CustBluetootDevices custBluetootDevices1 = custBluetootDevicesArrayList.get(postion);
                         custBluetootDevices1.setConnected(false);
                         my_fragmentScanAdapter.notifyItemChanged(postion);
+                        cancelProgressDialog();
                     }
                 }
             }

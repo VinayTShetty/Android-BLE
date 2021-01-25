@@ -136,6 +136,7 @@ public class MainActivity extends AppCompatActivity
                 String bleAddress=intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_BLE_ADDRESS)));
                 boolean connectionStatus=intent.getBooleanExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_CONNECTED_DISCONNECTED),false);
                 passConnectionSucesstoFragmentScanForUIChange(bleAddress,connectionStatus);
+              System.out.println("CONNECT_DISCONNECT MainActivity bluetootServiceRecieverData bleAddress= "+bleAddress+" Connection Status= "+connectionStatus);
             }
         }
         private void passConnectionSucesstoFragmentScanForUIChange(String connectedDeviceAddress,boolean connect_disconnect) {
@@ -268,8 +269,11 @@ public class MainActivity extends AppCompatActivity
     public void makeDevieConnecteDisconnect(CustBluetootDevices custBluetootDevices, boolean connect_disconnect) {
         if(connect_disconnect){
             mBluetoothLeService.connect(custBluetootDevices.getBleAddress());
+            System.out.println("CONNECT_DISCONNECT MainActivity makeDevieConnecteDisconnect bleAddress= "+custBluetootDevices.getBleAddress()+" Connection Status= "+true);
         }else {
             mBluetoothLeService.disconnect(custBluetootDevices.getBleAddress());
+            System.out.println("CONNECT_DISCONNECT MainActivity makeDevieConnecteDisconnect bleAddress= "+custBluetootDevices.getBleAddress()+" Connection Status= "+false);
+
         }
     }
 
