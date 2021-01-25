@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
+import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.util.Log;
 import androidx.annotation.Nullable;
@@ -53,6 +54,10 @@ public class BluetoothLeService extends Service {
     public final static String EXTRA_DATA =
             "com.example.googleble.le.EXTRA_DATA";
 
+    /**
+     * Connection Time out timer
+     */
+    ConnectionTimeOutTimer connectionTimeOutTimer;
     private Map<String, BluetoothGatt> mutlipleBluetooDeviceGhatt;
 
     @Override
@@ -303,13 +308,13 @@ public class BluetoothLeService extends Service {
         if (mBluetoothAdapter == null || address == null) {
             return false;
         }
-
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
             return false;
         }
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
-        Log.d(TAG," connect=  "+mBluetoothGatt.toString());
+        connectionTimeOutTimer=new ConnectionTimeOutTimer(10000,1000);
+        connectionTimeOutTimer.start();
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
         return true;
@@ -378,6 +383,31 @@ public class BluetoothLeService extends Service {
             result=false;
         }
         return result;
+    }
+
+
+    public class ConnectionTimeOutTimer extends CountDownTimer{
+
+        /**
+         * @param millisInFuture    The number of millis in the future from the call
+         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
+         *                          is called.
+         * @param countDownInterval The interval along the way to receive
+         *                          {@link #onTick(long)} callbacks.
+         */
+        public ConnectionTimeOutTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+
+        }
+
+        @Override
+        public void onFinish() {
+
+        }
     }
 
 
