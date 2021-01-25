@@ -159,31 +159,26 @@ public class BluetoothLeService extends Service {
         @Override
         public void onDescriptorRead(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorRead(gatt, descriptor, status);
-            Log.d(TAG,"onDescriptorRead");
         }
 
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorWrite(gatt, descriptor, status);
-            Log.d(TAG,"onDescriptorWrite");
         }
 
         @Override
         public void onReliableWriteCompleted(BluetoothGatt gatt, int status) {
             super.onReliableWriteCompleted(gatt, status);
-            Log.d(TAG,"onReliableWriteCompleted");
         }
 
         @Override
         public void onReadRemoteRssi(BluetoothGatt gatt, int rssi, int status) {
             super.onReadRemoteRssi(gatt, rssi, status);
-            Log.d(TAG,"onReadRemoteRssi");
         }
 
         @Override
         public void onMtuChanged(BluetoothGatt gatt, int mtu, int status) {
             super.onMtuChanged(gatt, mtu, status);
-            Log.d(TAG,"onMtuChanged");
         }
     };
 
@@ -244,10 +239,8 @@ public class BluetoothLeService extends Service {
         descriptor = characteristic.getDescriptor(
                 UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
         if (descriptor == null) {
-            System.out.println("NOTIFICATION NOT ENABLE");
             return;
         }
-        System.out.println("NOTIFICATION ENABLE");
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
      }
@@ -262,7 +255,6 @@ public class BluetoothLeService extends Service {
         characteristic.setValue(data);
         boolean status=false;
         status=mBluetoothGatt.writeCharacteristic(characteristic);
-        Log.w(TAG, "sendDataToBleDevice "+status);
     }
 
 
@@ -316,7 +308,16 @@ public class BluetoothLeService extends Service {
         if (device == null) {
             return false;
         }
+        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress) && mBluetoothGatt != null) {
+            if (mBluetoothGatt.connect()) {
+                mConnectionState = STATE_CONNECTING;
+                return true;
+            } else {
+                return false;
+            }
+        }
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
+        Log.d(TAG," connect=  "+mBluetoothGatt.toString());
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
         return true;
@@ -333,13 +334,11 @@ public class BluetoothLeService extends Service {
         if (mBluetoothManager == null) {
             mBluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
             if (mBluetoothManager == null) {
-                Log.e(TAG, "Unable to initialize BluetoothManager.");
                 return false;
             }
         }
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         if (mBluetoothAdapter == null) {
-            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
             return false;
         }
 
