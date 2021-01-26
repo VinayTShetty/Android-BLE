@@ -10,12 +10,14 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
+import android.content.AsyncQueryHandler;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -231,13 +233,13 @@ public class MainActivity extends AppCompatActivity
     public void start_stop_scan() {
         if(ble_on_off()){
             if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STOPED)) || (SCAN_TAG.equalsIgnoreCase(""))) {
-                System.out.println("SCAN_ISSUE (start_stop_scan if) = SCAN_TAG= "+SCAN_TAG);
+                System.out.println("SCAN_ISSUE START_STOP_SCAN_IF = SCAN_TAG= "+SCAN_TAG);
                 startScan();
             }else if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STARTED))) {
                 /**
                  * Scan already started.
                  */
-                System.out.println("SCAN_ISSUE (start_stop_scan else if ) = SCAN_TAG= "+SCAN_TAG);
+                System.out.println("SCAN_ISSUE START_STOP_SCAN_IF_ELSE = SCAN_TAG= "+SCAN_TAG);
             }
         }
     }
@@ -245,12 +247,12 @@ public class MainActivity extends AppCompatActivity
     private void startScan() {
         SCAN_TAG = getResources().getString(R.string.SCAN_STARTED);
         bluetoothLeScanner.startScan(leScanCallback);
-        System.out.println("SCAN_ISSUE (startScan ) = SCAN_TAG= "+SCAN_TAG);
+        System.out.println("SCAN_ISSUE_SCAN_STARTED  = SCAN_TAG= "+SCAN_TAG);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mScanning = false;
-                System.out.println("SCAN_ISSUE (startScan handler ) = SCAN_TAG= "+SCAN_TAG);
+                System.out.println("SCAN_ISSUE_START_SCAN_HANDLER = SCAN_TAG= "+SCAN_TAG);
                 stopScan();
             }
         }, SCAN_PERIOD);
@@ -259,7 +261,7 @@ public class MainActivity extends AppCompatActivity
     private void stopScan() {
         SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
         bluetoothLeScanner.stopScan(leScanCallback);
-        System.out.println("SCAN_ISSUE (stopScan) = SCAN_TAG= "+SCAN_TAG);
+        System.out.println("SCAN_ISSUE_STOP_SCAN = SCAN_TAG= "+SCAN_TAG);
     }
 
     private ScanCallback leScanCallback =
@@ -267,13 +269,14 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
                     super.onScanResult(callbackType, result);
+                    System.out.println("DEVICES  = "+SCAN_TAG+" BLE DEVICES= "+result.getDevice());
                     if (passScanDeviceToActivity_interface != null) {
                         if (result != null) {
                             if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)) {
                                 passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), result.getDevice().getName(), result.getDevice(), false));
-                                System.out.println("DEVICES  = "+SCAN_TAG+" BLE DEVICES= "+result.getDevice());
+                               // System.out.println("DEVICES  = "+SCAN_TAG+" BLE DEVICES= "+result.getDevice());
                             } else {
-                               // passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
+                                passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
 
                             }
                         }
