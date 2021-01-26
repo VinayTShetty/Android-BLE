@@ -108,6 +108,7 @@ public class BluetoothLeService extends Service {
             Log.d(TAG,"onPhyRead");
         }
 
+        
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -116,7 +117,14 @@ public class BluetoothLeService extends Service {
             Log.d(TAG, "onConnectionStateChange: STATUS= "+status+" NEW STATE= "+newState);
             if(status==133&&newState==0){
                 if(mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
-
+                   String bleAddressForReConnection= mBluetoothGatt.getDevice().getAddress();
+                    BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddress);
+                    if( bluetoothGatt != null ){
+                        bluetoothGatt.disconnect();
+                        bluetoothGatt.close();
+                        bluetoothGatt = null;
+                    }
+                    connect(bleAddressForReConnection);
                 }
             }
             else if (newState == BluetoothProfile.STATE_CONNECTED&&status==0) {
