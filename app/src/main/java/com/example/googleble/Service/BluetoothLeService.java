@@ -119,16 +119,20 @@ public class BluetoothLeService extends Service {
             if(status==133&&newState==0){
                 if(mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     retryOptionForConnection++;
-                   String bleAddressForReConnection= mBluetoothGatt.getDevice().getAddress();
-                    BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddressForReConnection);
-                    if( bluetoothGatt != null ){
-                        bluetoothGatt.disconnect();
-                        bluetoothGatt.close();
-                        bluetoothGatt = null;
+                    if(retryOptionForConnection<3){
+                        String bleAddressForReConnection= mBluetoothGatt.getDevice().getAddress();
+                        BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddressForReConnection);
+                        if( bluetoothGatt != null ){
+                            bluetoothGatt.disconnect();
+                            bluetoothGatt.close();
+                            bluetoothGatt = null;
+                        }
+                        mutlipleBluetooDeviceGhatt.remove(bleAddressForReConnection);
+                        connect(bleAddressForReConnection);
+                        retryOptionForConnection++;
                     }
-                    mutlipleBluetooDeviceGhatt.remove(bleAddressForReConnection);
-                    retryOptionForConnection++;
-                    if(retryOptionForConnection>3){
+
+                    else if(retryOptionForConnection>3){
                         String bleAddressForReConnection_after_retry= mBluetoothGatt.getDevice().getAddress();
                         BluetoothGatt bluetoothGatt_retry = mutlipleBluetooDeviceGhatt.get(bleAddressForReConnection_after_retry);
                         if( bluetoothGatt_retry != null ){
@@ -139,7 +143,7 @@ public class BluetoothLeService extends Service {
                         retryOptionForConnection=0;
                         return;
                     }else {
-                        connect(bleAddressForReConnection);
+
                     }
 
                 }
