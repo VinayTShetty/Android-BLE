@@ -158,6 +158,8 @@ public class MainActivity extends AppCompatActivity
                 byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN));
                 int dataWrittenType = intent.getIntExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN_TYPE), -1);
                 System.out.println("what data written to the Firmware= "+convertHexToBigIntegert(bytesToHex(dataWritten)));
+                System.out.println("what data written to the Firmware bleAddres = "+bleAddress);
+                System.out.println("what data written to the Firmware= "+dataWrittenType);
           }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED)))) {
                 /**
                  * Data Obtained from the firmware.
@@ -256,8 +258,11 @@ public class MainActivity extends AppCompatActivity
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
-                SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
-                bluetoothLeScanner.stopScan(leScanCallback);
+                if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STARTED))) {
+                    SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
+                    bluetoothLeScanner.stopScan(leScanCallback);
+                }
+
             }
         });
     }
@@ -272,10 +277,10 @@ public class MainActivity extends AppCompatActivity
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)&&(result.getDevice().getName().startsWith("Succorfish"))) {
+                                    if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)/*&&(result.getDevice().getName().startsWith("Succorfish"))*/) {
                                         passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), result.getDevice().getName(), result.getDevice(), false));
                                     } else {
-                                      //  passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
+                                        passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
 
                                     }
                                 }
