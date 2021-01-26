@@ -253,24 +253,25 @@ public class BluetoothLeService extends Service {
         BluetoothGattDescriptor descriptor = null;
         descriptor = characteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
         if (descriptor == null) {
-            enableNotiticationToFirmwareCompleted(false);
+            enableNotiticationToFirmwareCompleted(false,mBluetoothGatt.getDevice().getAddress());
             return;
         }
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
-        enableNotiticationToFirmwareCompleted(true);
+        enableNotiticationToFirmwareCompleted(true,mBluetoothGatt.getDevice().getAddress());
 
      }
 
-    private void enableNotiticationToFirmwareCompleted(boolean result) {
+    private void enableNotiticationToFirmwareCompleted(boolean result,String bleAddress) {
         Intent intent=new Intent(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE));
         intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE_DATA),result);
+        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE_BLE_AADRESS),bleAddress);
         sendBroadcast(intent);
     }
 
-    /**
+ /*   *//**
      * Send Data to BLE Devices.
-     */
+     *//*
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public  void sendDataToBleDevice(byte [] data){
         BluetoothGattService service=mBluetoothGatt.getService(GEO_FENCE_SERVICE_UUID);
@@ -279,7 +280,7 @@ public class BluetoothLeService extends Service {
         characteristic.setValue(data);
         boolean status=false;
         status=mBluetoothGatt.writeCharacteristic(characteristic);
-    }
+    }*/
 
 
     public void sendDataToBleDevice(String bleAddress,byte [] data){
