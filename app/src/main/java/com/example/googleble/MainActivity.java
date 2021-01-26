@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity
                     showDataForItemInRecycleView.recievedDataFromFirmware(bleAddress,obtainedFromFirmware);
                 }
                 System.out.println("DATA_FIRMWARE_OBTAINED= "+""+convertHexToBigIntegert(bytesToHex(obtainedFromFirmware)));
+                mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
             }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION)))) {
                 /**
                  * Logic to cacen the progress dialog and hide it.
