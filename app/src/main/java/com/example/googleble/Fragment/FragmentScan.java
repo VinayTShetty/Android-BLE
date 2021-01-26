@@ -193,7 +193,7 @@ public class FragmentScan extends BaseFragment {
             case R.id.scan_item:
                 clearScannedDevices();
                 getListOfConnectedDevices();
-                myMainActivity.start_stop_scan();
+               myMainActivity.start_stop_scan();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

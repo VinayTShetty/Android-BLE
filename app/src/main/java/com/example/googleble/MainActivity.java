@@ -32,7 +32,6 @@ import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_
 import com.example.googleble.interfaceActivityFragment.ShowDataForItemInRecycleView;
 import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
-
 import static com.example.googleble.Utility.UtilityHelper.ble_on_off;
 
 public class MainActivity extends AppCompatActivity
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity
     private boolean mScanning;
     private Handler handler = new Handler();
     // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 10000;
+    private static final long SCAN_PERIOD = 60000;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
@@ -232,7 +231,13 @@ public class MainActivity extends AppCompatActivity
     public void start_stop_scan() {
         if(ble_on_off()){
             if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STOPED)) || (SCAN_TAG.equalsIgnoreCase(""))) {
+                System.out.println("SCAN_ISSUE (start_stop_scan if) = SCAN_TAG= "+SCAN_TAG);
                 startScan();
+            }else if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STARTED))) {
+                /**
+                 * Scan already started.
+                 */
+                System.out.println("SCAN_ISSUE (start_stop_scan else if ) = SCAN_TAG= "+SCAN_TAG);
             }
         }
     }
@@ -240,10 +245,12 @@ public class MainActivity extends AppCompatActivity
     private void startScan() {
         SCAN_TAG = getResources().getString(R.string.SCAN_STARTED);
         bluetoothLeScanner.startScan(leScanCallback);
+        System.out.println("SCAN_ISSUE (startScan ) = SCAN_TAG= "+SCAN_TAG);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mScanning = false;
+                System.out.println("SCAN_ISSUE (startScan handler ) = SCAN_TAG= "+SCAN_TAG);
                 stopScan();
             }
         }, SCAN_PERIOD);
@@ -252,6 +259,7 @@ public class MainActivity extends AppCompatActivity
     private void stopScan() {
         SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
         bluetoothLeScanner.stopScan(leScanCallback);
+        System.out.println("SCAN_ISSUE (stopScan) = SCAN_TAG= "+SCAN_TAG);
     }
 
     private ScanCallback leScanCallback =
@@ -263,6 +271,7 @@ public class MainActivity extends AppCompatActivity
                         if (result != null) {
                             if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)) {
                                 passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), result.getDevice().getName(), result.getDevice(), false));
+                                System.out.println("DEVICES  = "+SCAN_TAG+" BLE DEVICES= "+result.getDevice());
                             } else {
                                // passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
 
