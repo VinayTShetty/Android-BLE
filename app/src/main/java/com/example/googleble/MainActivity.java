@@ -33,6 +33,8 @@ import com.example.googleble.interfaceFragmentActivity.DeviceConnectDisconnect;
 import com.example.googleble.interfaceFragmentActivity.SendDataToBleDevice;
 
 import static com.example.googleble.BLE_packets.BleAuthenication.WriteValue01;
+import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.bytesToHex;
+import static com.example.googleble.ByteConversionPackage.ByteConversionHelper.convertHexToBigIntegert;
 import static com.example.googleble.Utility.UtilityHelper.ble_on_off;
 
 public class MainActivity extends AppCompatActivity
@@ -163,7 +165,7 @@ public class MainActivity extends AppCompatActivity
                 if(showDataForItemInRecycleView!=null){
                     showDataForItemInRecycleView.recievedDataFromFirmware(bleAddress,obtainedFromFirmware);
                 }
-                System.out.println(" Data Obtained From Firmware= ");
+                System.out.println("DATA_FIRMWARE_OBTAINED= "+""+convertHexToBigIntegert(bytesToHex(obtainedFromFirmware)));
             }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION)))) {
                 /**
                  * Logic to cacen the progress dialog and hide it.

@@ -245,7 +245,7 @@ public class BluetoothLeService extends Service {
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void setCharacteristicNotifications(BluetoothGattCharacteristic characteristic,
-                                               boolean enabled) {
+                                               boolean enabled,String bleAddress) {
         if (mBluetoothAdapter == null || mBluetoothGatt == null) {
             return;
         }
@@ -253,12 +253,12 @@ public class BluetoothLeService extends Service {
         BluetoothGattDescriptor descriptor = null;
         descriptor = characteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
         if (descriptor == null) {
-            enableNotiticationToFirmwareCompleted(false,mBluetoothGatt.getDevice().getAddress());
+            enableNotiticationToFirmwareCompleted(false,bleAddress);
             return;
         }
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
-        enableNotiticationToFirmwareCompleted(true,mBluetoothGatt.getDevice().getAddress());
+        enableNotiticationToFirmwareCompleted(true,bleAddress);
 
      }
 
@@ -369,7 +369,7 @@ public class BluetoothLeService extends Service {
    private void enableChartersticNotification(BluetoothGatt loc_bluetoothGatt){
        BluetoothGattService service=loc_bluetoothGatt.getService(GEO_FENCE_SERVICE_UUID);
        BluetoothGattCharacteristic characteristic= service.getCharacteristic(GEO_FENCE_CHARCTERSTICS_UUID);
-       setCharacteristicNotifications(characteristic,true);
+       setCharacteristicNotifications(characteristic,true,loc_bluetoothGatt.getDevice().getAddress());
    }
 
     /**
