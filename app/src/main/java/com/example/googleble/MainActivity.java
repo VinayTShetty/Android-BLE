@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     private boolean mScanning;
     private Handler handler = new Handler();
     // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 10000;
+    private static final long SCAN_PERIOD = 30000;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
