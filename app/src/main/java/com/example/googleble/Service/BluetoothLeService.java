@@ -119,6 +119,7 @@ public class BluetoothLeService extends Service {
             if(status==133&&newState==0){
                 if(mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     retryOptionForConnection++;
+                    Log.d(TAG, "RETRY: retryOptionForConnection "+retryOptionForConnection);
                     if(retryOptionForConnection<3){
                         String bleAddressForReConnection= mBluetoothGatt.getDevice().getAddress();
                         BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddressForReConnection);
@@ -128,6 +129,7 @@ public class BluetoothLeService extends Service {
                             bluetoothGatt = null;
                         }
                         mutlipleBluetooDeviceGhatt.remove(bleAddressForReConnection);
+                        Log.d(TAG, "RETRY:  Going for connection ");
                         connect(bleAddressForReConnection);
                         retryOptionForConnection++;
                     }
@@ -139,6 +141,7 @@ public class BluetoothLeService extends Service {
                             bluetoothGatt_retry.close();
                             bluetoothGatt_retry = null;
                         }
+                        mutlipleBluetooDeviceGhatt.remove(bleAddressForReConnection_after_retry);
                         retryOptionForConnection=0;
                         return;
                     }else {
