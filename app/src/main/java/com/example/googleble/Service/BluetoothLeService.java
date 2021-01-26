@@ -113,7 +113,13 @@ public class BluetoothLeService extends Service {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             BluetoothDevice bleDevice=gatt.getDevice();
             String bleAddress=bleDevice.getAddress();
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
+            Log.d(TAG, "onConnectionStateChange: STATUS= "+status+" NEW STATE= "+newState);
+            if(status==133&&newState==0){
+                if(mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
+
+                }
+            }
+            else if (newState == BluetoothProfile.STATE_CONNECTED) {
                 if(!mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     mutlipleBluetooDeviceGhatt.put(bleAddress,gatt);
                     mutlipleBluetooDeviceGhatt.get(bleAddress).discoverServices();
@@ -123,6 +129,7 @@ public class BluetoothLeService extends Service {
                 if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddress);
                     if( bluetoothGatt != null ){
+                        bluetoothGatt.disconnect();
                         bluetoothGatt.close();
                         bluetoothGatt = null;
                     }
@@ -397,5 +404,8 @@ public class BluetoothLeService extends Service {
         }
         return result;
     }
+    /**
+     * 133 status error logs
+     * BluetoothLeService: onConnectionStateChange: STATUS= 133 NEW STATE= 0
+     */
 }
-
