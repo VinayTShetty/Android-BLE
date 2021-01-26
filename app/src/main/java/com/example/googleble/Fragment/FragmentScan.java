@@ -96,7 +96,6 @@ public class FragmentScan extends BaseFragment {
             public void ClickedItem(CustBluetootDevices custBluetootDevices, int positionClicked) {
                 if (deviceConnectDisconnect != null) {
                     if (custBluetootDevices.isConnected()) {
-                        showProgressDialog(custBluetootDevices.getBleAddress(),"Disonnecting ");
                         deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, false);
                     } else if (!custBluetootDevices.isConnected()) {
                         if(ble_on_off()){
