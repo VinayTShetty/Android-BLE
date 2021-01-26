@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Build;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import androidx.annotation.Nullable;
@@ -61,7 +62,8 @@ public class BluetoothLeService extends Service {
      */
     ConnectionTimeOutTimer connectionTimeOutTimer;
     private Map<String, BluetoothGatt> mutlipleBluetooDeviceGhatt;
-
+    private Handler BleScannerhandler = new Handler();
+    private static final long connectionInterval = 60000;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -111,10 +113,15 @@ public class BluetoothLeService extends Service {
                 /**
                  * Logic to remove ConnectionTime Out timer...
                  */
-                if(connectionTimeOutTimer!=null){
+               /* if(connectionTimeOutTimer!=null){
                     connectionTimeOutTimer.cancel();
                     connectionTimeOutTimer=null;
+                }*/
+
+                if(BleScannerhandler!=null){
+                    BleScannerhandler.removeCallbacks(null);
                 }
+
             }
 
             BluetoothDevice bleDevice=gatt.getDevice();
@@ -355,8 +362,16 @@ public class BluetoothLeService extends Service {
         if(connectionTimeOutTimer!=null){
             connectionTimeOutTimer.cancel();
         }
-        connectionTimeOutTimer=new ConnectionTimeOutTimer(10000,1000);
-        connectionTimeOutTimer.start();
+
+        BleScannerhandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sendTimerUpdateToMainActivity(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION),getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_FINISH_KEY),true);
+            }
+        },connectionInterval);
+        //connectionTimeOutTimer=new ConnectionTimeOutTimer(10000,1000);
+
+        //connectionTimeOutTimer.start();
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
         return true;
