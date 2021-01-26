@@ -202,7 +202,6 @@ public class BluetoothLeService extends Service {
             Log.d(TAG,"onMtuChanged");
         }
     };
-
     /**
      * BroadCast Update to send Data to the MainActivity.
      */
@@ -322,6 +321,10 @@ public class BluetoothLeService extends Service {
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
             return false;
+        }
+        if(mBluetoothGatt!=null){
+            mBluetoothGatt.close();
+            mBluetoothGatt.disconnect();
         }
         mBluetoothGatt=null;
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
