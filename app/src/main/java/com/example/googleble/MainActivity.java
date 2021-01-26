@@ -148,7 +148,6 @@ public class MainActivity extends AppCompatActivity
                 String bleAddress = intent.getStringExtra((getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_BLE_ADDRESS)));
                 boolean connectionStatus = intent.getBooleanExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS_CONNECTED_DISCONNECTED), false);
                 passConnectionSucesstoFragmentScanForUIChange(bleAddress, connectionStatus);
-            //    Log.d(TAG,"CONNECTION STATUS= BLE Address= "+bleAddress+" CONNECTION STATUS= "+connectionStatus);
             } else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION)))) {
                 /**
                  * Data Written to the firmware getting loop back after write confermation.
@@ -156,8 +155,7 @@ public class MainActivity extends AppCompatActivity
                 String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_ADDRESS));
                 byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN));
                 int dataWrittenType = intent.getIntExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN_TYPE), -1);
-       //         Log.d(TAG,"Data Written ACK=  bleAddress= "+bleAddress+" DATA WRITTEN TYPE= "+dataWrittenType+" BYTE ARRAY IN HEX = "+ convertByteArrayToHexString(dataWritten)+" Data in String= "+new String(dataWritten));
-            }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED)))) {
+          }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED)))) {
                 /**
                  * Data Obtained from the firmware.
                  */
@@ -166,7 +164,6 @@ public class MainActivity extends AppCompatActivity
                 if(showDataForItemInRecycleView!=null){
                     showDataForItemInRecycleView.recievedDataFromFirmware(bleAddress,obtainedFromFirmware);
                 }
-         //       Log.d(TAG,"DATT OBTAINED FROM FIRMWARE BLE ADDRESS=  "+bleAddress+" "+" DATA OBTAINED FROM FIRMWARE= "+convertByteArrayToHexString(dataWritten)+" "+" Data in String= "+new String(dataWritten));
             }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION)))) {
                 /**
                  * Logic to cacen the progress dialog and hide it.
@@ -208,38 +205,14 @@ public class MainActivity extends AppCompatActivity
         bindService(intent, serviceConnection, BIND_AUTO_CREATE);
     }
 
-    /**
-     * Scan for the BLE Devices.
-     */
-    public void scanLeDevice() {
-        if (!mScanning) {
-            // Stops scanning after a pre-defined scan period.
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mScanning = false;
-                    bluetoothLeScanner.stopScan(leScanCallback);
-                }
-            }, SCAN_PERIOD);
-
-            mScanning = true;
-            bluetoothLeScanner.startScan(leScanCallback);
-        } else {
-            mScanning = false;
-            bluetoothLeScanner.stopScan(leScanCallback);
-        }
-    }
-
     public void start_stop_scan() {
         if(ble_on_off()){
             if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STOPED)) || (SCAN_TAG.equalsIgnoreCase(""))) {
-                System.out.println("SCAN_ISSUE START_STOP_SCAN_IF = SCAN_TAG= "+SCAN_TAG);
                 startScan();
             }else if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STARTED))) {
                 /**
                  * Scan already started.
                  */
-                System.out.println("SCAN_ISSUE START_STOP_SCAN_IF_ELSE = SCAN_TAG= "+SCAN_TAG);
             }
         }
     }
@@ -247,12 +220,10 @@ public class MainActivity extends AppCompatActivity
     private void startScan() {
         SCAN_TAG = getResources().getString(R.string.SCAN_STARTED);
         bluetoothLeScanner.startScan(leScanCallback);
-        System.out.println("SCAN_ISSUE_SCAN_STARTED  = SCAN_TAG= "+SCAN_TAG);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 mScanning = false;
-                System.out.println("SCAN_ISSUE_START_SCAN_HANDLER = SCAN_TAG= "+SCAN_TAG);
                 stopScan();
             }
         }, SCAN_PERIOD);
@@ -261,7 +232,6 @@ public class MainActivity extends AppCompatActivity
     private void stopScan() {
         SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
         bluetoothLeScanner.stopScan(leScanCallback);
-        System.out.println("SCAN_ISSUE_STOP_SCAN = SCAN_TAG= "+SCAN_TAG);
     }
 
     private ScanCallback leScanCallback =
@@ -269,12 +239,10 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void onScanResult(int callbackType, ScanResult result) {
                     super.onScanResult(callbackType, result);
-                    System.out.println("DEVICES  = "+SCAN_TAG+" BLE DEVICES= "+result.getDevice());
                     if (passScanDeviceToActivity_interface != null) {
                         if (result != null) {
                             if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)) {
                                 passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), result.getDevice().getName(), result.getDevice(), false));
-                               // System.out.println("DEVICES  = "+SCAN_TAG+" BLE DEVICES= "+result.getDevice());
                             } else {
                                 passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
 
@@ -283,9 +251,6 @@ public class MainActivity extends AppCompatActivity
                     }
                 }
             };
-
-
-
 
     /**
      * Fragment Transaction
