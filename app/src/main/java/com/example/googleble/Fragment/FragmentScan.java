@@ -312,6 +312,7 @@ public class FragmentScan extends BaseFragment {
                     for (BluetoothDevice bluetoothDevice : connectedDevicesList) {
                         CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
                         custBluetootDevices.setBleAddress(bluetoothDevice.getAddress());
+                        custBluetootDevices.setDataObtained("");
                         custBluetootDevices.setConnected(true);
                         if (bluetoothDevice.getName() != null) {
                             custBluetootDevices.setDeviceName(bluetoothDevice.getName());
