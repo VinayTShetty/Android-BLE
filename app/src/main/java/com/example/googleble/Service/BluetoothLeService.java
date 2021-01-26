@@ -244,20 +244,22 @@ public class BluetoothLeService extends Service {
      * Set Chanrcterstic Notificaiton.
      */
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public void setCharacteristicNotifications(BluetoothGattCharacteristic characteristic,
+    public void setCharacteristicNotifications(BluetoothGatt bluetoothGatt,BluetoothGattCharacteristic characteristic,
                                                boolean enabled,String bleAddress) {
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+        if (mBluetoothAdapter == null || bluetoothGatt == null) {
             return;
         }
-        mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
+        bluetoothGatt.setCharacteristicNotification(characteristic, enabled);
         BluetoothGattDescriptor descriptor = null;
         descriptor = characteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
         if (descriptor == null) {
             enableNotiticationToFirmwareCompleted(false,bleAddress);
+            System.out.println("ENABLE_NOTIFICATION_FALSE");
             return;
         }
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-        mBluetoothGatt.writeDescriptor(descriptor);
+        System.out.println("ENABLE_NOTIFICATION_TRUE");
+        bluetoothGatt.writeDescriptor(descriptor);
         enableNotiticationToFirmwareCompleted(true,bleAddress);
 
      }
@@ -369,7 +371,7 @@ public class BluetoothLeService extends Service {
    private void enableChartersticNotification(BluetoothGatt loc_bluetoothGatt){
        BluetoothGattService service=loc_bluetoothGatt.getService(GEO_FENCE_SERVICE_UUID);
        BluetoothGattCharacteristic characteristic= service.getCharacteristic(GEO_FENCE_CHARCTERSTICS_UUID);
-       setCharacteristicNotifications(characteristic,true,loc_bluetoothGatt.getDevice().getAddress());
+       setCharacteristicNotifications(loc_bluetoothGatt,characteristic,true,loc_bluetoothGatt.getDevice().getAddress());
    }
 
     /**
