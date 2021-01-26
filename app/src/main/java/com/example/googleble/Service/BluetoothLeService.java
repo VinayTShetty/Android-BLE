@@ -117,10 +117,13 @@ public class BluetoothLeService extends Service {
             String bleAddress=bleDevice.getAddress();
             Log.d(TAG, "onConnectionStateChange: STATUS= "+status+" NEW STATE= "+newState+" GATT INSANCE= "+gatt.getDevice().getAddress());
             if(status==133&&newState==0){
-                retryOptionForConnection++;
+
                 switch (retryOptionForConnection){
-                    case 4:
+                    case 2:
                         retryOptionForConnection=0;
+                        gatt.disconnect();
+                        gatt.close();
+                        gatt=null;
                         break;
                     default:
                         retryOptionForConnection++;
