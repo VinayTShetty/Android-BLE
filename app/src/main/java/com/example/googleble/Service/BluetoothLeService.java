@@ -115,7 +115,7 @@ public class BluetoothLeService extends Service {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             BluetoothDevice bleDevice=gatt.getDevice();
             String bleAddress=bleDevice.getAddress();
-            Log.d(TAG, "onConnectionStateChange: STATUS= "+status+" NEW STATE= "+newState);
+            Log.d(TAG, "onConnectionStateChange: STATUS= "+status+" NEW STATE= "+newState+" GATT INSANCE= "+gatt.getDevice().getAddress());
             if(status==133&&newState==0){
                 if(mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     retryOptionForConnection++;
