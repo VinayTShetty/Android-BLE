@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity
                     showDataForItemInRecycleView.recievedDataFromFirmware(bleAddress,obtainedFromFirmware);
                 }
                 System.out.println("DATA_FIRMWARE_OBTAINED= "+""+convertHexToBigIntegert(bytesToHex(obtainedFromFirmware)));
-                mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
+           //     mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
             }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION)))) {
                 /**
                  * Logic to cacen the progress dialog and hide it.
@@ -185,6 +185,8 @@ public class MainActivity extends AppCompatActivity
                 if(notificationEnabled){
                     String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE_BLE_AADRESS));
                     System.out.println("bleAddress= "+bleAddress);
+
+               //     mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
                   new Handler().postDelayed(new Runnable() {
                       @Override
                       public void run() {
@@ -207,7 +209,6 @@ public class MainActivity extends AppCompatActivity
             }
         }
     };
-
     /**
      * BroadCast Reciever Data Trigger.
      */
