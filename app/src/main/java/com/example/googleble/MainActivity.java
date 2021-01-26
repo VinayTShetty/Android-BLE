@@ -187,13 +187,13 @@ public class MainActivity extends AppCompatActivity
                     String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE_BLE_AADRESS));
                     System.out.println("bleAddress= "+bleAddress);
 
-                   mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
-                 /* new Handler().postDelayed(new Runnable() {
+                 //  mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
+                  new Handler().postDelayed(new Runnable() {
                       @Override
                       public void run() {
                           mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
                       }
-                  },2000);*/
+                  },2000);
                 }
             }
         }
@@ -278,10 +278,10 @@ public class MainActivity extends AppCompatActivity
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)) {
+                                    if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)&&(result.getDevice().getName().startsWith("Succorfish"))) {
                                         passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), result.getDevice().getName(), result.getDevice(), false));
                                     } else {
-                                        passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
+                                      //  passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
 
                                     }
                                 }
