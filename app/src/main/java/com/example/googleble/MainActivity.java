@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -241,7 +242,13 @@ public class MainActivity extends AppCompatActivity
 
     private void startScan() {
         SCAN_TAG = getResources().getString(R.string.SCAN_STARTED);
-        bluetoothLeScanner.startScan(leScanCallback);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                bluetoothLeScanner.startScan(leScanCallback);
+            }
+        });
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -253,7 +260,12 @@ public class MainActivity extends AppCompatActivity
 
     private void stopScan() {
         SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
-        bluetoothLeScanner.stopScan(leScanCallback);
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                bluetoothLeScanner.stopScan(leScanCallback);
+            }
+        });
     }
 
     private ScanCallback leScanCallback =
@@ -263,12 +275,19 @@ public class MainActivity extends AppCompatActivity
                     super.onScanResult(callbackType, result);
                     if (passScanDeviceToActivity_interface != null) {
                         if (result != null) {
-                            if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)) {
-                                passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), result.getDevice().getName(), result.getDevice(), false));
-                            } else {
-                                passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if ((result.getDevice().getName() != null) && (result.getDevice().getName().length() > 0)) {
+                                        passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), result.getDevice().getName(), result.getDevice(), false));
+                                    } else {
+                                        passScanDeviceToActivity_interface.sendCustomBleDevice(new CustBluetootDevices(result.getDevice().getAddress(), "NA", result.getDevice(), false));
 
-                            }
+                                    }
+                                }
+                            });
+
+
                         }
                     }
                 }
