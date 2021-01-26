@@ -109,6 +109,7 @@ public class BluetoothLeService extends Service {
         }
 
 
+        int retryOptionForConnection=0;
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -117,6 +118,7 @@ public class BluetoothLeService extends Service {
             Log.d(TAG, "onConnectionStateChange: STATUS= "+status+" NEW STATE= "+newState);
             if(status==133&&newState==0){
                 if(mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
+                    retryOptionForConnection++;
                    String bleAddressForReConnection= mBluetoothGatt.getDevice().getAddress();
                     BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddressForReConnection);
                     if( bluetoothGatt != null ){
@@ -125,7 +127,21 @@ public class BluetoothLeService extends Service {
                         bluetoothGatt = null;
                     }
                     mutlipleBluetooDeviceGhatt.remove(bleAddressForReConnection);
-                    connect(bleAddressForReConnection);
+                    retryOptionForConnection++;
+                    if(retryOptionForConnection>3){
+                        String bleAddressForReConnection_after_retry= mBluetoothGatt.getDevice().getAddress();
+                        BluetoothGatt bluetoothGatt_retry = mutlipleBluetooDeviceGhatt.get(bleAddressForReConnection_after_retry);
+                        if( bluetoothGatt_retry != null ){
+                            bluetoothGatt_retry.disconnect();
+                            bluetoothGatt_retry.close();
+                            bluetoothGatt_retry = null;
+                        }
+                        retryOptionForConnection=0;
+                        return;
+                    }else {
+                        connect(bleAddressForReConnection);
+                    }
+
                 }
             }
             else if (newState == BluetoothProfile.STATE_CONNECTED&&status==0) {
