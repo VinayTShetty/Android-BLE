@@ -141,6 +141,8 @@ public class BluetoothLeService extends Service {
                             bluetoothGatt_retry.close();
                             bluetoothGatt_retry = null;
                         }
+                        Log.d(TAG, "RETRY:  RETRY COUNT=  "+retryOptionForConnection);
+                        Log.d(TAG, "RETRY:  RETRY  removing retrycount  ");
                         mutlipleBluetooDeviceGhatt.remove(bleAddressForReConnection_after_retry);
                         retryOptionForConnection=0;
                         return;

@@ -99,7 +99,7 @@ public class FragmentScan extends BaseFragment {
                         deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, false);
                     } else if (!custBluetootDevices.isConnected()) {
                         if(ble_on_off()){
-                            fragmentScanConnectionTimeOutTimer=new Fragment_ConnectionTimeOutTimer(10000,1000);
+                            fragmentScanConnectionTimeOutTimer=new Fragment_ConnectionTimeOutTimer(30000,1000);
                             fragmentScanConnectionTimeOutTimer.start();
                             showProgressDialog(custBluetootDevices.getBleAddress(),"Connectiong ");
                             deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, true);
