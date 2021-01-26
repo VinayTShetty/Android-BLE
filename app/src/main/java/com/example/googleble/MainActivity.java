@@ -169,6 +169,14 @@ public class MainActivity extends AppCompatActivity
                  */
                 boolean timerCancelled=intent.getBooleanExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_FINISH_KEY),false);
                 passTimerOutConnectionTag(timerCancelled);
+            }else  if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE)))) {
+                    boolean resultNotificationEnable_Disable= intent.getBooleanExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE_DATA),false);
+                    if(resultNotificationEnable_Disable){
+                        /**
+                         * Start the intial packets to the Device..
+                         */
+                        
+                    }
             }
         }
 
@@ -194,6 +202,7 @@ public class MainActivity extends AppCompatActivity
         intentFilter.addAction(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION));
         intentFilter.addAction(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED));
         intentFilter.addAction(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION));
+        intentFilter.addAction(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE));
         return intentFilter;
     }
 

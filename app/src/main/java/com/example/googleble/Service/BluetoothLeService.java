@@ -251,14 +251,23 @@ public class BluetoothLeService extends Service {
         }
         mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
         BluetoothGattDescriptor descriptor = null;
-        descriptor = characteristic.getDescriptor(
-                UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
+        descriptor = characteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
         if (descriptor == null) {
+            enableNotiticationToFirmwareCompleted(false);
             return;
         }
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
+        enableNotiticationToFirmwareCompleted(true);
+
      }
+
+    private void enableNotiticationToFirmwareCompleted(boolean result) {
+        Intent intent=new Intent(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE));
+        intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE_DATA),result);
+        sendBroadcast(intent);
+    }
+
     /**
      * Send Data to BLE Devices.
      */
