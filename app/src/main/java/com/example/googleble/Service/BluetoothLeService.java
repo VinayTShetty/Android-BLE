@@ -251,20 +251,6 @@ public class BluetoothLeService extends Service {
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         bluetoothGatt.writeDescriptor(descriptor);
         enableNotiticationToFirmwareCompleted(true,bleAddress);
-     /*   if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            return;
-        }
-        mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
-        BluetoothGattDescriptor descriptor = null;
-        descriptor = characteristic.getDescriptor(
-                UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
-        if (descriptor == null) {
-            return;
-        }
-        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-        mBluetoothGatt.writeDescriptor(descriptor);
-        enableNotiticationToFirmwareCompleted(true,bleAddress);*/
-
      }
 
     private void enableNotiticationToFirmwareCompleted(boolean result,String bleAddress) {
@@ -273,21 +259,6 @@ public class BluetoothLeService extends Service {
         intent.putExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE_BLE_AADRESS),bleAddress);
         sendBroadcast(intent);
     }
-
- /*   *//**
-     * Send Data to BLE Devices.
-     *//*
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
-    public  void sendDataToBleDevice(byte [] data){
-        BluetoothGattService service=mBluetoothGatt.getService(GEO_FENCE_SERVICE_UUID);
-        BluetoothGattCharacteristic characteristic= service.getCharacteristic(GEO_FENCE_CHARCTERSTICS_UUID);
-        characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-        characteristic.setValue(data);
-        boolean status=false;
-        status=mBluetoothGatt.writeCharacteristic(characteristic);
-    }*/
-
-
     public void sendDataToBleDevice(String bleAddress,byte [] data){
         System.out.println("Sending Data to BLE Device. ");
         if(mutlipleBluetooDeviceGhatt!=null && mutlipleBluetooDeviceGhatt.size()>0 &&mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
@@ -341,6 +312,7 @@ public class BluetoothLeService extends Service {
         if (device == null) {
             return false;
         }
+        mBluetoothGatt=null;
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
