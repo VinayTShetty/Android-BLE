@@ -17,13 +17,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
-
 import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.Fragment.FragmentData;
 import com.example.googleble.Fragment.FragmentScan;
@@ -53,7 +50,7 @@ public class MainActivity extends AppCompatActivity
     private boolean mScanning;
     private Handler handler = new Handler();
     // Stops scanning after 10 seconds.
-    private static final long SCAN_PERIOD = 60000;
+    private static final long SCAN_PERIOD = 10000;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
 
