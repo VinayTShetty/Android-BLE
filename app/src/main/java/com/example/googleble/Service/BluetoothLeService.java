@@ -61,10 +61,7 @@ public class BluetoothLeService extends Service {
     /**
      * Connection Time out timer
      */
-    ConnectionTimeOutTimer connectionTimeOutTimer;
     private Map<String, BluetoothGatt> mutlipleBluetooDeviceGhatt;
-    private Handler BleScannerhandler = new Handler(Looper.getMainLooper());
-    private static final long connectionInterval = 60000;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -110,22 +107,6 @@ public class BluetoothLeService extends Service {
         @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            if(mBluetoothGatt.equals(gatt)){
-                /**
-                 * Logic to remove ConnectionTime Out timer...
-                 */
-               /* if(connectionTimeOutTimer!=null){
-                    connectionTimeOutTimer.cancel();
-                    connectionTimeOutTimer=null;
-                }*/
-
-               /* if(BleScannerhandler!=null){
-                    BleScannerhandler.removeCallbacks(null);
-                }*/
-                BleScannerhandler.removeCallbacks(my_runnable);
-
-            }
-
             BluetoothDevice bleDevice=gatt.getDevice();
             String bleAddress=bleDevice.getAddress();
             if (newState == BluetoothProfile.STATE_CONNECTED) {
@@ -361,20 +342,6 @@ public class BluetoothLeService extends Service {
             return false;
         }
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
-        if(connectionTimeOutTimer!=null){
-            connectionTimeOutTimer.cancel();
-        }
-
-    /*    BleScannerhandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                sendTimerUpdateToMainActivity(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION),getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_FINISH_KEY),true);
-            }
-        },connectionInterval);*/
-        //connectionTimeOutTimer=new ConnectionTimeOutTimer(10000,1000);
-        //connectionTimeOutTimer.start();
-        BleScannerhandler.removeCallbacks(my_runnable);
-        BleScannerhandler.postDelayed(my_runnable, 10000);
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
         return true;
@@ -444,54 +411,5 @@ public class BluetoothLeService extends Service {
         }
         return result;
     }
-
-
-    public class ConnectionTimeOutTimer extends CountDownTimer{
-        /**
-         * @param millisInFuture    The number of millis in the future from the call
-         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
-         *                          is called.
-         * @param countDownInterval The interval along the way to receive
-         *                          {@link #onTick(long)} callbacks.
-         */
-        public ConnectionTimeOutTimer(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-        }
-
-        @Override
-        public void onFinish() {
-                if(mBluetoothGatt!=null){
-                    mBluetoothGatt.disconnect();
-                    mBluetoothGatt.close();
-                    mBluetoothGatt=null;
-                }
-            sendTimerUpdateToMainActivity(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION),getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_FINISH_KEY),true);
-        }
-
-    }
-    private void sendTimerUpdateToMainActivity(final String action,final String key,final boolean value) {
-        Intent intent=new Intent(action);
-        intent.putExtra(key,value);
-        sendBroadcast(intent);
-    }
-
-    private void startHandler(){
-
-    }
-    Runnable my_runnable = new Runnable() {
-        @Override
-        public void run() {
-            if(mBluetoothGatt!=null){
-                mBluetoothGatt.disconnect();
-                mBluetoothGatt.close();
-                mBluetoothGatt=null;
-            }
-            sendTimerUpdateToMainActivity(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION),getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_FINISH_KEY),true);
-        }
-    };
 }
 

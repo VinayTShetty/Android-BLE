@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,6 +25,7 @@ import com.example.googleble.CustomObjects.CustBluetootDevices;
 import com.example.googleble.DialogHelper.ShowDialogHelper;
 import com.example.googleble.MainActivity;
 import com.example.googleble.R;
+import com.example.googleble.Service.BluetoothLeService;
 import com.example.googleble.interfaceActivityFragment.DeviceConnectionTimeOut;
 import com.example.googleble.interfaceActivityFragment.PassConnectionStatusToFragment;
 import com.example.googleble.interfaceActivityFragment.PassScanDeviceToActivity_interface;
@@ -55,6 +57,7 @@ public class FragmentScan extends BaseFragment {
     SendDataToBleDevice sendDataToBleDevice;
     ShowDialogHelper showDialogHelper;
     KProgressHUD progressDialog;
+    Fragment_ConnectionTimeOutTimer fragmentScanConnectionTimeOutTimer;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -97,6 +100,8 @@ public class FragmentScan extends BaseFragment {
                         deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, false);
                     } else if (!custBluetootDevices.isConnected()) {
                         if(ble_on_off()){
+                            fragmentScanConnectionTimeOutTimer=new Fragment_ConnectionTimeOutTimer(10000,1000);
+                            fragmentScanConnectionTimeOutTimer.start();
                             showProgressDialog(custBluetootDevices.getBleAddress(),"Connectiong ");
                             deviceConnectDisconnect.makeDevieConnecteDisconnect(custBluetootDevices, true);
                         }else {
@@ -237,6 +242,7 @@ public class FragmentScan extends BaseFragment {
             @Override
             public void connectDisconnect(String bleAddress, boolean connected_disconnected) {
                 if (connected_disconnected) {
+                    cancelTimerFragmentScanTimer();
                     CustBluetootDevices custBluetootDevices = new CustBluetootDevices();
                     custBluetootDevices.setBleAddress(bleAddress);
                     if (custBluetootDevicesArrayList.contains(custBluetootDevices)) {
@@ -289,6 +295,8 @@ public class FragmentScan extends BaseFragment {
 
     }
 
+
+
     private void setUpRecycleView() {
         my_fragmentScanAdapter = new FragmentScanAdapter(custBluetootDevicesArrayList);
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
@@ -339,7 +347,33 @@ public class FragmentScan extends BaseFragment {
         }
     }
 
-    private void sendDataToBleDevice(){
+    public class Fragment_ConnectionTimeOutTimer extends CountDownTimer {
+        /**
+         * @param millisInFuture    The number of millis in the future from the call
+         *                          to {@link #start()} until the countdown is done and {@link #onFinish()}
+         *                          is called.
+         * @param countDownInterval The interval along the way to receive
+         *                          {@link #onTick(long)} callbacks.
+         */
+        public Fragment_ConnectionTimeOutTimer(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+        }
+
+        @Override
+        public void onFinish() {
+        cancelProgressDialog();
+        }
 
     }
+    private void cancelTimerFragmentScanTimer() {
+        if(fragmentScanConnectionTimeOutTimer!=null){
+            fragmentScanConnectionTimeOutTimer.cancel();
+            fragmentScanConnectionTimeOutTimer=null;
+        }
+    }
+
 }
