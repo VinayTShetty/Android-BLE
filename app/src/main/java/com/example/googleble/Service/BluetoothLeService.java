@@ -171,6 +171,7 @@ public class BluetoothLeService extends Service {
         @Override
         public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
             super.onDescriptorWrite(gatt, descriptor, status);
+            enableNotiticationToFirmwareCompleted(true,gatt.getDevice().getAddress());
         }
 
         @Override
@@ -250,7 +251,7 @@ public class BluetoothLeService extends Service {
         }
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         bluetoothGatt.writeDescriptor(descriptor);
-        enableNotiticationToFirmwareCompleted(true,bleAddress);
+
      }
 
     private void enableNotiticationToFirmwareCompleted(boolean result,String bleAddress) {

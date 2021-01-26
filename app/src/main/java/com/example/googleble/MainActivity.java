@@ -185,14 +185,7 @@ public class MainActivity extends AppCompatActivity
                 if(notificationEnabled){
                     String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE_BLE_AADRESS));
                     System.out.println("bleAddress= "+bleAddress);
-
-                 //  mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
-                  new Handler().postDelayed(new Runnable() {
-                      @Override
-                      public void run() {
-                          mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
-                      }
-                  },2000);
+                  mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
                 }
             }
         }
