@@ -117,7 +117,24 @@ public class BluetoothLeService extends Service {
             String bleAddress=bleDevice.getAddress();
             Log.d(TAG, "onConnectionStateChange: STATUS= "+status+" NEW STATE= "+newState+" GATT INSANCE= "+gatt.getDevice().getAddress());
             if(status==133&&newState==0){
-                if(mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
+                retryOptionForConnection++;
+                switch (retryOptionForConnection){
+                    case 4:
+                        retryOptionForConnection=0;
+                        break;
+                    default:
+                        retryOptionForConnection++;
+                        connect(gatt.getDevice().getAddress());
+                        break;
+                }
+
+
+
+
+
+
+
+                /*if(mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     retryOptionForConnection++;
                     Log.d(TAG, "RETRY: retryOptionForConnection "+retryOptionForConnection);
                     if(retryOptionForConnection<3){
@@ -149,7 +166,7 @@ public class BluetoothLeService extends Service {
                     }else {
 
                     }
-                }
+                }*/
             }
             else if (newState == BluetoothProfile.STATE_CONNECTED&&status==0) {
                 retryOptionForConnection=0;
