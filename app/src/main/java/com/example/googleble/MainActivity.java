@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity
                 int dataWrittenType = intent.getIntExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN_TYPE), -1);
                 System.out.println("what data written to the Firmware= "+convertHexToBigIntegert(bytesToHex(dataWritten)));
                 System.out.println("what data written to the Firmware bleAddres = "+bleAddress);
-                System.out.println("what data written to the Firmware= "+dataWrittenType);
+                System.out.println("what data written to the Firmware type = "+dataWrittenType);
           }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED)))) {
                 /**
                  * Data Obtained from the firmware.
