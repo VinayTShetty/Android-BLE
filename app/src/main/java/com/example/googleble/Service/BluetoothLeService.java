@@ -288,9 +288,6 @@ public class BluetoothLeService extends Service {
     }
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
     public void disconnect(String bleAddress) {
-        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-            return;
-        }
         if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
             BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddress);
             if( bluetoothGatt != null ){
