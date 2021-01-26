@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -62,7 +63,7 @@ public class BluetoothLeService extends Service {
      */
     ConnectionTimeOutTimer connectionTimeOutTimer;
     private Map<String, BluetoothGatt> mutlipleBluetooDeviceGhatt;
-    private Handler BleScannerhandler = new Handler();
+    private Handler BleScannerhandler = new Handler(Looper.getMainLooper());
     private static final long connectionInterval = 60000;
     @Override
     public void onCreate() {
@@ -118,9 +119,10 @@ public class BluetoothLeService extends Service {
                     connectionTimeOutTimer=null;
                 }*/
 
-                if(BleScannerhandler!=null){
+               /* if(BleScannerhandler!=null){
                     BleScannerhandler.removeCallbacks(null);
-                }
+                }*/
+                BleScannerhandler.removeCallbacks(my_runnable);
 
             }
 
@@ -363,15 +365,16 @@ public class BluetoothLeService extends Service {
             connectionTimeOutTimer.cancel();
         }
 
-        BleScannerhandler.postDelayed(new Runnable() {
+    /*    BleScannerhandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 sendTimerUpdateToMainActivity(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION),getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_FINISH_KEY),true);
             }
-        },connectionInterval);
+        },connectionInterval);*/
         //connectionTimeOutTimer=new ConnectionTimeOutTimer(10000,1000);
-
         //connectionTimeOutTimer.start();
+        BleScannerhandler.removeCallbacks(my_runnable);
+        BleScannerhandler.postDelayed(my_runnable, 10000);
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
         return true;
@@ -475,5 +478,20 @@ public class BluetoothLeService extends Service {
         intent.putExtra(key,value);
         sendBroadcast(intent);
     }
+
+    private void startHandler(){
+
+    }
+    Runnable my_runnable = new Runnable() {
+        @Override
+        public void run() {
+            if(mBluetoothGatt!=null){
+                mBluetoothGatt.disconnect();
+                mBluetoothGatt.close();
+                mBluetoothGatt=null;
+            }
+            sendTimerUpdateToMainActivity(getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_ACTION),getResources().getString(R.string.BLUETOOTHLE_SERVICE_TIMER_FINISH_KEY),true);
+        }
+    };
 }
 
