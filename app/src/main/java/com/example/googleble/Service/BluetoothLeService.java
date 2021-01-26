@@ -127,8 +127,8 @@ public class BluetoothLeService extends Service {
 
                 }
             }else {
-                Log.d(TAG,"DIFFERENT STATUS "+status);
-                Log.d(TAG,"DIFFERENT NEW STATE=  "+newState);
+                Log.d(TAG,"BLE_SERVICE DIFFERENT STATUS "+status);
+                Log.d(TAG,"BLE_SERVICE DIFFERENT NEW STATE=  "+newState);
             }
         }
 

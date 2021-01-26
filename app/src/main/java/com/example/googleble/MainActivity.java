@@ -241,10 +241,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void startScan() {
-        SCAN_TAG = getResources().getString(R.string.SCAN_STARTED);
+
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                SCAN_TAG = getResources().getString(R.string.SCAN_STARTED);
                 bluetoothLeScanner.startScan(leScanCallback);
             }
         });
@@ -259,10 +260,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void stopScan() {
-        SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
         AsyncTask.execute(new Runnable() {
             @Override
             public void run() {
+                SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
                 bluetoothLeScanner.stopScan(leScanCallback);
             }
         });
@@ -361,9 +362,16 @@ public class MainActivity extends AppCompatActivity
     public void makeDevieConnecteDisconnect(CustBluetootDevices custBluetootDevices, boolean connect_disconnect) {
         if (connect_disconnect) {
             boolean connectissue = mBluetoothLeService.connect(custBluetootDevices.getBleAddress());
+            if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STARTED))) {
+                SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
+                stopScan();
+            }
         } else {
             mBluetoothLeService.disconnect(custBluetootDevices.getBleAddress());
-
+            if (SCAN_TAG.equalsIgnoreCase(getResources().getString(R.string.SCAN_STARTED))) {
+                SCAN_TAG = getResources().getString(R.string.SCAN_STOPED);
+                stopScan();
+            }
         }
     }
 
