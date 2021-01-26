@@ -119,13 +119,13 @@ public class BluetoothLeService extends Service {
 
                 }
             }
-            else if (newState == BluetoothProfile.STATE_CONNECTED) {
+            else if (newState == BluetoothProfile.STATE_CONNECTED&&status==0) {
                 if(!mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     mutlipleBluetooDeviceGhatt.put(bleAddress,gatt);
                     mutlipleBluetooDeviceGhatt.get(bleAddress).discoverServices();
                     sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),gatt.getDevice().getAddress(),true);
                 }
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            } else if (newState == BluetoothProfile.STATE_DISCONNECTED&&status==8) {
                 if (mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
                     BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddress);
                     if( bluetoothGatt != null ){
