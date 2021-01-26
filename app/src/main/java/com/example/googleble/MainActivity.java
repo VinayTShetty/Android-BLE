@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity
                 String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_ADDRESS));
                 byte[] dataWritten = intent.getByteArrayExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN));
                 int dataWrittenType = intent.getIntExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_WRITTEN_FOR_CONFERMATION_BLE_DATA_WRITTEN_TYPE), -1);
+                System.out.println("what data written to the Firmware= "+convertHexToBigIntegert(bytesToHex(dataWritten)));
           }else if ((action != null) && (action.equalsIgnoreCase(getResources().getString(R.string.BLUETOOTHLE_SERVICE_DATA_OBTAINED)))) {
                 /**
                  * Data Obtained from the firmware.
@@ -182,10 +183,14 @@ public class MainActivity extends AppCompatActivity
                 System.out.println("ENABLE_NOTIFICATION_TRUE MainActivity "+notificationEnabled);
                 if(notificationEnabled){
                     String bleAddress = intent.getStringExtra(getResources().getString(R.string.BLUETOOTHLE_SERVICE_NOTIFICATION_ENABLE_BLE_AADRESS));
-                    mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
+                    System.out.println("bleAddress= "+bleAddress);
+                  new Handler().postDelayed(new Runnable() {
+                      @Override
+                      public void run() {
+                          mBluetoothLeService.sendDataToBleDevice(bleAddress,WriteValue01());
+                      }
+                  },2000);
                 }
-
-
             }
         }
 

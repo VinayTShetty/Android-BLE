@@ -28,6 +28,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.PrimitiveIterator;
 import java.util.UUID;
+
+import static com.example.googleble.BLE_packets.BleAuthenication.WriteValue01;
 import static com.example.googleble.UUID.FirmwareUUID.CLIENT_CHARACTERISTIC_CONFIG;
 import static com.example.googleble.UUID.FirmwareUUID.GEO_FENCE_CHARCTERSTICS_UUID;
 import static com.example.googleble.UUID.FirmwareUUID.GEO_FENCE_SERVICE_UUID;
@@ -135,8 +137,8 @@ public class BluetoothLeService extends Service {
 
                 }
             }else {
-                Log.d(TAG,"STATUS "+status);
-                Log.d(TAG,"NEW STATE=  "+newState);
+                Log.d(TAG,"DIFFERENT STATUS "+status);
+                Log.d(TAG,"DIFFERENT NEW STATE=  "+newState);
             }
         }
 
@@ -254,13 +256,24 @@ public class BluetoothLeService extends Service {
         descriptor = characteristic.getDescriptor(UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
         if (descriptor == null) {
             enableNotiticationToFirmwareCompleted(false,bleAddress);
-            System.out.println("ENABLE_NOTIFICATION_FALSE");
             return;
         }
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-        System.out.println("ENABLE_NOTIFICATION_TRUE");
         bluetoothGatt.writeDescriptor(descriptor);
         enableNotiticationToFirmwareCompleted(true,bleAddress);
+     /*   if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            return;
+        }
+        mBluetoothGatt.setCharacteristicNotification(characteristic, enabled);
+        BluetoothGattDescriptor descriptor = null;
+        descriptor = characteristic.getDescriptor(
+                UUID.fromString(CLIENT_CHARACTERISTIC_CONFIG));
+        if (descriptor == null) {
+            return;
+        }
+        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        mBluetoothGatt.writeDescriptor(descriptor);
+        enableNotiticationToFirmwareCompleted(true,bleAddress);*/
 
      }
 
@@ -286,13 +299,17 @@ public class BluetoothLeService extends Service {
 
 
     public void sendDataToBleDevice(String bleAddress,byte [] data){
-        BluetoothGattService service = mutlipleBluetooDeviceGhatt.get(bleAddress).getService(GEO_FENCE_SERVICE_UUID);
-        BluetoothGattCharacteristic characteristic= service.getCharacteristic(GEO_FENCE_CHARCTERSTICS_UUID);
-        characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
-        characteristic.setValue(data);
-        boolean status=false;
-        BluetoothGatt bluetoothGatt=  mutlipleBluetooDeviceGhatt.get(bleAddress);
-        status=bluetoothGatt.writeCharacteristic(characteristic);
+        System.out.println("Sending Data to BLE Device. ");
+        if(mutlipleBluetooDeviceGhatt!=null && mutlipleBluetooDeviceGhatt.size()>0 &&mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
+            BluetoothGattService service = mutlipleBluetooDeviceGhatt.get(bleAddress).getService(GEO_FENCE_SERVICE_UUID);
+            BluetoothGattCharacteristic characteristic= service.getCharacteristic(GEO_FENCE_CHARCTERSTICS_UUID);
+            characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT);
+            characteristic.setValue(data);
+            boolean status=false;
+            BluetoothGatt bluetoothGatt=  mutlipleBluetooDeviceGhatt.get(bleAddress);
+            status=bluetoothGatt.writeCharacteristic(characteristic);
+            System.out.println("DATA WRITTEN SUCESSFULLY "+status);
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -335,6 +352,9 @@ public class BluetoothLeService extends Service {
             return false;
         }
         mBluetoothGatt = device.connectGatt(this, false, gattCallback);
+        if(connectionTimeOutTimer!=null){
+            connectionTimeOutTimer.cancel();
+        }
         connectionTimeOutTimer=new ConnectionTimeOutTimer(10000,1000);
         connectionTimeOutTimer.start();
         mBluetoothDeviceAddress = address;
