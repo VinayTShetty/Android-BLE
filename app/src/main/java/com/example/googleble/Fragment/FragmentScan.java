@@ -318,6 +318,7 @@ public class FragmentScan extends BaseFragment {
         }else {
             custBluetootDevicesArrayList.clear();
             my_fragmentScanAdapter.notifyDataSetChanged();
+            showDialogHelper.errorDialog("Turn on Bluetooth");
         }
     }
     private void clearScannedDevices(){
