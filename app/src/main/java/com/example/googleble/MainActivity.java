@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity
         bindBleServiceToMainActivity();
         intializeFragmentManager();
         replaceFragmentTransaction(new FragmentScan(), null);
-        registerReceiver(bluetootServiceRecieverData, makeGattUpdateIntentFilter());
+
     }
 
     @Override
@@ -88,13 +88,13 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-
+        registerReceiver(bluetootServiceRecieverData, makeGattUpdateIntentFilter());
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-
+        unregisterReceiver(bluetootServiceRecieverData);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unregisterReceiver(bluetootServiceRecieverData);
+
         unbindService(serviceConnection);
         mBluetoothLeService = null;
     }
