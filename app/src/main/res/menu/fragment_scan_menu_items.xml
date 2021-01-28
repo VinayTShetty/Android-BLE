@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item  android:id="@+id/stop_item"
-        android:title="stop"
+    <item  android:id="@+id/D4"
+        android:title="D4"
+        app:showAsAction="always"
+        />
+    <item  android:id="@+id/EB"
+        android:title="EB"
         app:showAsAction="always"
         />
     <item  android:id="@+id/scan_item"
