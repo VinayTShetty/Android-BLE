@@ -193,6 +193,7 @@ public class FragmentScan extends BaseFragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.stop_item:
+                System.out.println("Check Device is Connected "+myMainActivity.mBluetoothLeService.checkDeviceIsAlreadyConnected("EB:A9:F8:DD:D8:52"));
                 return true;
             case R.id.scan_item:
                 clearScannedDevices();
