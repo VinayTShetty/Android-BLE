@@ -122,7 +122,6 @@ public class BluetoothLeService extends Service {
                         retryOptionForConnection=0;
                         gatt.disconnect();
                         gatt.close();
-                        gatt=null;
                         System.out.println("Retry Count= "+retryOptionForConnection);
                         break;
                     default:
@@ -130,7 +129,6 @@ public class BluetoothLeService extends Service {
                         gatt.disconnect();
                         gatt.close();
                         String addressForReconnection=gatt.getDevice().getAddress();
-                        gatt=null;
                         connect(addressForReconnection);
                         System.out.println("Retry Count= "+retryOptionForConnection);
                         break;
@@ -357,7 +355,7 @@ public class BluetoothLeService extends Service {
             mBluetoothGatt.disconnect();
         }*/
         mBluetoothGatt=null;
-        mBluetoothGatt = device.connectGatt(this, false, gattCallback);
+        mBluetoothGatt = device.connectGatt(this, false, gattCallback,2);
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
         return true;
