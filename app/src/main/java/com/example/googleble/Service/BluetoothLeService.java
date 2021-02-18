@@ -124,55 +124,19 @@ public class BluetoothLeService extends Service {
                         gatt.disconnect();
                         gatt.close();
                         gatt=null;
+                        System.out.println("Retry Count= "+retryOptionForConnection);
                         break;
                     default:
                         retryOptionForConnection++;
                         gatt.disconnect();
                         gatt.close();
+                        String addressForReconnection=gatt.getDevice().getAddress();
                         gatt=null;
-                        connect(gatt.getDevice().getAddress());
+                        connect(addressForReconnection);
+                        System.out.println("Retry Count= "+retryOptionForConnection);
                         break;
                 }
 
-
-
-
-
-
-
-                /*if(mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
-                    retryOptionForConnection++;
-                    Log.d(TAG, "RETRY: retryOptionForConnection "+retryOptionForConnection);
-                    if(retryOptionForConnection<3){
-                        String bleAddressForReConnection= mBluetoothGatt.getDevice().getAddress();
-                        BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddressForReConnection);
-                        if( bluetoothGatt != null ){
-                            bluetoothGatt.disconnect();
-                            bluetoothGatt.close();
-                            bluetoothGatt = null;
-                        }
-                        mutlipleBluetooDeviceGhatt.remove(bleAddressForReConnection);
-                        Log.d(TAG, "RETRY:  Going for connection ");
-                        connect(bleAddressForReConnection);
-                        retryOptionForConnection++;
-                    }
-                    else if(retryOptionForConnection>3){
-                        String bleAddressForReConnection_after_retry= mBluetoothGatt.getDevice().getAddress();
-                        BluetoothGatt bluetoothGatt_retry = mutlipleBluetooDeviceGhatt.get(bleAddressForReConnection_after_retry);
-                        if( bluetoothGatt_retry != null ){
-                            bluetoothGatt_retry.disconnect();
-                            bluetoothGatt_retry.close();
-                            bluetoothGatt_retry = null;
-                        }
-                        Log.d(TAG, "RETRY:  RETRY COUNT=  "+retryOptionForConnection);
-                        Log.d(TAG, "RETRY:  RETRY  removing retrycount  ");
-                        mutlipleBluetooDeviceGhatt.remove(bleAddressForReConnection_after_retry);
-                        retryOptionForConnection=0;
-                        return;
-                    }else {
-
-                    }
-                }*/
             }
             else if (newState == BluetoothProfile.STATE_CONNECTED&&status==0) {
                 retryOptionForConnection=0;
@@ -194,6 +158,8 @@ public class BluetoothLeService extends Service {
                     sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),gatt.getDevice().getAddress(),false);
 
                 }
+                gatt.disconnect();
+                gatt.close();
             }else {
                 Log.d(TAG,"BLE_SERVICE DIFFERENT STATUS "+status);
                 Log.d(TAG,"BLE_SERVICE DIFFERENT NEW STATE=  "+newState);
@@ -467,4 +433,38 @@ public class BluetoothLeService extends Service {
      * 133 status error logs
      * BluetoothLeService: onConnectionStateChange: STATUS= 133 NEW STATE= 0
      */
+
+    private void bleMulitpleRetryConnection_RemoveGhatt(String bleAddress,int retryOptionForConnection){
+        if(mutlipleBluetooDeviceGhatt.containsKey(bleAddress)){
+            if(retryOptionForConnection<3){
+                String bleAddressForReConnection= mBluetoothGatt.getDevice().getAddress();
+                BluetoothGatt bluetoothGatt = mutlipleBluetooDeviceGhatt.get(bleAddressForReConnection);
+                if( bluetoothGatt != null ){
+                    bluetoothGatt.disconnect();
+                    bluetoothGatt.close();
+                    bluetoothGatt = null;
+                }
+                mutlipleBluetooDeviceGhatt.remove(bleAddressForReConnection);
+                Log.d(TAG, "RETRY:  Going for connection ");
+                connect(bleAddressForReConnection);
+                retryOptionForConnection++;
+            }
+            else if(retryOptionForConnection>3){
+                String bleAddressForReConnection_after_retry= mBluetoothGatt.getDevice().getAddress();
+                BluetoothGatt bluetoothGatt_retry = mutlipleBluetooDeviceGhatt.get(bleAddressForReConnection_after_retry);
+                if( bluetoothGatt_retry != null ){
+                    bluetoothGatt_retry.disconnect();
+                    bluetoothGatt_retry.close();
+                    bluetoothGatt_retry = null;
+                }
+                Log.d(TAG, "RETRY:  RETRY COUNT=  "+retryOptionForConnection);
+                Log.d(TAG, "RETRY:  RETRY  removing retrycount  ");
+                mutlipleBluetooDeviceGhatt.remove(bleAddressForReConnection_after_retry);
+                retryOptionForConnection=0;
+                return;
+            }else {
+
+            }
+        }
+    }
 }
