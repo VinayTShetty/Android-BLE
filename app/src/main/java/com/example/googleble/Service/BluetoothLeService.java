@@ -127,6 +127,9 @@ public class BluetoothLeService extends Service {
                         break;
                     default:
                         retryOptionForConnection++;
+                        gatt.disconnect();
+                        gatt.close();
+                        gatt=null;
                         connect(gatt.getDevice().getAddress());
                         break;
                 }
@@ -203,7 +206,7 @@ public class BluetoothLeService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 Log.d(TAG,"onServicesDiscovered");
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
-               enableChartersticNotification(gatt);
+               //enableChartersticNotification(gatt);
             }
         }
 
