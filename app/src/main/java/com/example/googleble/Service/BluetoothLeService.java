@@ -117,7 +117,6 @@ public class BluetoothLeService extends Service {
             String bleAddress=bleDevice.getAddress();
             Log.d(TAG, "onConnectionStateChange: STATUS= "+status+" NEW STATE= "+newState+" GATT INSANCE= "+gatt.getDevice().getAddress());
             if(status==133&&newState==0){
-
                 switch (retryOptionForConnection){
                     case 2:
                         retryOptionForConnection=0;
@@ -156,10 +155,11 @@ public class BluetoothLeService extends Service {
                     }
                     mutlipleBluetooDeviceGhatt.remove(bleAddress);
                     sendDevice_StatusToMainActivty(getResources().getString(R.string.BLUETOOTHLE_SERVICE_CONNECTION_STATUS),gatt.getDevice().getAddress(),false);
-
+                }else {
+                    gatt.disconnect();
+                    gatt.close();
+                    gatt=null;
                 }
-                gatt.disconnect();
-                gatt.close();
             }else {
                 Log.d(TAG,"BLE_SERVICE DIFFERENT STATUS "+status);
                 Log.d(TAG,"BLE_SERVICE DIFFERENT NEW STATE=  "+newState);
